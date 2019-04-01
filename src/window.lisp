@@ -1,7 +1,11 @@
 (in-package #:ui)
 
 (defclass window (control)
-  ((fullscreen
+  ((child
+     :accessor child
+     :initarg :child
+     :initform nil)
+   (fullscreen
      :accessor fullscreen
      :initarg :fullscreen
      :initform nil
@@ -23,6 +27,11 @@
                      (getf initargs :width)
                      (getf initargs :height)
                      (getf initargs :has-menubar))))
+
+(defmethod (setf child) :after (new-value (object window))
+  (when new-value
+    (format t "~A ~A~%" new-value object)
+    (%window-set-child (handle object) (handle new-value))))
 
 (defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object window) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
