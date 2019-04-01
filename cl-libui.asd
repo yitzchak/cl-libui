@@ -15,4 +15,6 @@
          (:file "libui")
          (:file "core")
          (:file "control")
+         (:file "box")
+         (:file "tab")
          (:file "window")))))

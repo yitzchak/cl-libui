@@ -238,18 +238,18 @@
 (cffi:defcfun ("uiBoxAppend" %box-append) :void
   (b :pointer)
   (child :pointer)
-  (stretchy :int))
+  (stretchy (:boolean :int)))
 
 (cffi:defcfun ("uiBoxDelete" %box-delete) :void
   (b :pointer)
   (index :int))
 
-(cffi:defcfun ("uiBoxPadded" %box-padded) :int
+(cffi:defcfun ("uiBoxPadded" %box-padded) (:boolean :int)
   (b :pointer))
 
 (cffi:defcfun ("uiBoxSetPadded" %box-set-padded) :void
   (b :pointer)
-  (padded :int))
+  (padded (:boolean :int)))
 
 (cffi:defcfun ("uiNewHorizontalBox" %new-horizontal-box) :pointer)
 
