@@ -9,6 +9,7 @@
     #:control
     #:enabled
     #:horizontal-box
+    #:horizontal-separator
     #:label
     #:main
     #:margined
@@ -20,5 +21,6 @@
     #:text
     #:title
     #:vertical-box
+    #:vertical-separator
     #:visible
     #:window))

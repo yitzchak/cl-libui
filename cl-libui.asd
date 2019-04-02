@@ -19,5 +19,6 @@
          (:file "button")
          (:file "checkbox")
          (:file "label")
+         (:file "separator")
          (:file "tab")
          (:file "window")))))
