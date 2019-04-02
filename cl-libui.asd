@@ -18,6 +18,7 @@
          (:file "box")
          (:file "button")
          (:file "checkbox")
+         (:file "group")
          (:file "label")
          (:file "separator")
          (:file "tab")

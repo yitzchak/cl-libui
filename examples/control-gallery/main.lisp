@@ -2,12 +2,14 @@
 
 (defun make-basic-controls-page ()
   (let ((vbox (make-instance 'ui:vertical-box :padded t))
-        (hbox (make-instance 'ui:horizontal-box :padded t)))
+        (hbox (make-instance 'ui:horizontal-box :padded t))
+        (group (make-instance 'ui:group :title "Entries" :margined t)))
     (ui:append-child vbox hbox)
     (ui:append-child hbox (make-instance 'ui:button :text "Button"))
     (ui:append-child hbox (make-instance 'ui:checkbox :text "Checkbox"))
     (ui:append-child vbox (make-instance 'ui:label :text "This is a label. Right now, labels can only span one line."))
     (ui:append-child vbox (make-instance 'ui:horizontal-separator))
+    (ui:append-child vbox group)
     vbox))
 
 (defun make-numbers-page ()
@@ -31,6 +33,5 @@
   (declare (ignore control))
   (ui::%quit)
   t)
-
 
 (ui:main)
