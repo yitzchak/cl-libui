@@ -6,7 +6,7 @@
 (defmethod on-toggled (control)
   (declare (ignore control)))
 
-(cffi:defcallback on-toggled-callback (:boolean :int) ((control :pointer) (data :pointer))
+(cffi:defcallback on-toggled-callback (:boolean :int) ((control control-type) (data :pointer))
   (declare (ignore data))
   (on-toggled control))
 
@@ -27,9 +27,9 @@
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('checked
-        (%checkbox-checked (handle object)))
+        (%checkbox-checked object))
       ('text
-        (%checkbox-text (handle object)))
+        (%checkbox-text object))
       (t
         (call-next-method)))
     (call-next-method)))
@@ -38,15 +38,14 @@
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('checked
-        (%checkbox-set-checked (handle object) new-value))
+        (%checkbox-set-checked object new-value))
       ('text
-        (%checkbox-set-text (handle object) new-value))
+        (%checkbox-set-text object new-value))
       (t
         (call-next-method)))
     (call-next-method)))
 
 (defmethod initialize-instance :before ((instance checkbox) &rest initargs &key &allow-other-keys)
-  (with-slots (handle) instance
-    (setf handle
-          (%new-checkbox (getf initargs :text)))
-    (%checkbox-on-toggled handle (cffi:callback on-toggled-callback) (cffi:null-pointer))))
+  (setf (handle instance)
+        (%new-checkbox (getf initargs :text)))
+  (%checkbox-on-toggled instance (cffi:callback on-toggled-callback) (cffi:null-pointer)))

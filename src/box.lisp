@@ -46,9 +46,3 @@
 
 (defmethod append-child ((object box) child &rest options &key &allow-other-keys)
   (%box-append (handle object) (handle child) (getf options :stretch)))
-
-(defmethod cffi:translate-to-foreign ((object vertical-box) (type (eql :pointer)))
-  (handle object))
-
-(defmethod cffi:translate-to-foreign ((object horizontal-box) (type (eql :pointer)))
-  (handle object))

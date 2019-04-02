@@ -6,7 +6,7 @@
 (defmethod on-clicked (control)
   (declare (ignore control)))
 
-(cffi:defcallback on-clicked-callback (:boolean :int) ((control :pointer) (data :pointer))
+(cffi:defcallback on-clicked-callback (:boolean :int) ((control control-type) (data :pointer))
   (declare (ignore data))
   (on-clicked control))
 
@@ -37,7 +37,6 @@
     (call-next-method)))
 
 (defmethod initialize-instance :before ((instance button) &rest initargs &key &allow-other-keys)
-  (with-slots (handle) instance
-    (setf handle
-          (%new-button (getf initargs :text)))
-    (%button-on-clicked handle (cffi:callback on-clicked-callback) (cffi:null-pointer))))
+  (setf (handle instance)
+        (%new-button (getf initargs :text)))
+  (%button-on-clicked instance (cffi:callback on-clicked-callback) (cffi:null-pointer)))

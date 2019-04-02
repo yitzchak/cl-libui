@@ -25,28 +25,39 @@
      :allocation :ui-instance))
   (:metaclass control-metaclass))
 
+(defparameter *controls* (make-hash-table))
+
+(defmethod initialize-instance :after ((instance control) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (setf (gethash (handle instance) *controls*) instance))
+
+(defmethod cffi:translate-to-foreign ((object control) (type control-type))
+  (declare (ignore type))
+  (handle object))
+
+(defmethod cffi:translate-from-foreign (handle (type control-type))
+  (gethash handle *controls*))
+
 (defmethod closer-mop:slot-value-using-class ((class control-metaclass) object (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
-    (let ((handle (handle object)))
-      (switch ((closer-mop:slot-definition-name slot) :test #'equal)
-        ('enabled
-          (%control-enabled handle))
-        ('visible
-          (%control-visible handle))))
+    (switch ((closer-mop:slot-definition-name slot) :test #'equal)
+      ('enabled
+        (%control-enabled object))
+      ('visible
+        (%control-visible object)))
     (call-next-method)))
 
 (defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) object (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
-    (let ((handle (handle object)))
-      (switch ((closer-mop:slot-definition-name slot) :test #'equal)
-        ('enabled
-          (if new-value
-            (%control-enable handle)
-            (%control-disable handle)))
-        ('visible
-          (if new-value
-            (%control-show handle)
-            (%control-hide handle)))))
+    (switch ((closer-mop:slot-definition-name slot) :test #'equal)
+      ('enabled
+        (if new-value
+          (%control-enable object)
+          (%control-disable object)))
+      ('visible
+        (if new-value
+          (%control-show object)
+          (%control-hide object))))
     (call-next-method)))
 
 (defmethod closer-mop:slot-boundp-using-class ((class control-metaclass) object (slot closer-mop:standard-effective-slot-definition))

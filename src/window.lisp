@@ -7,7 +7,7 @@
   (declare (ignore control))
   t)
 
-(cffi:defcallback on-closing-callback (:boolean :int) ((control :pointer) (data :pointer))
+(cffi:defcallback on-closing-callback (:boolean :int) ((control control-type) (data :pointer))
   (declare (ignore data))
   (on-closing control))
 
@@ -33,43 +33,39 @@
   (:metaclass control-metaclass))
 
 (defmethod initialize-instance :before ((instance window) &rest initargs &key &allow-other-keys)
-  (with-slots (handle) instance
-    (setf handle
-          (%new-window (getf initargs :title)
-                       (getf initargs :width)
-                       (getf initargs :height)
-                       (getf initargs :has-menubar)))
-    (%window-on-closing handle (cffi:callback on-closing-callback) (cffi:null-pointer))))
+  (setf (handle instance)
+        (%new-window (getf initargs :title)
+                     (getf initargs :width)
+                     (getf initargs :height)
+                     (getf initargs :has-menubar)))
+  (%window-on-closing instance (cffi:callback on-closing-callback) (cffi:null-pointer)))
 
 (defmethod (setf child) :after (new-value (object window))
   (when new-value
-    (format t "~A ~A~%" new-value object)
-    (%window-set-child (handle object) (handle new-value))))
+    (%window-set-child object new-value)))
 
 (defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object window) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
-    (let ((handle (handle object)))
-      (switch ((closer-mop:slot-definition-name slot) :test #'equal)
-        ('fullscreen
-          (%window-fullscreen handle))
-        ('margined
-          (%window-margined handle))
-        ('title
-          (%window-title handle))
-        (t
-          (call-next-method))))
+    (switch ((closer-mop:slot-definition-name slot) :test #'equal)
+      ('fullscreen
+        (%window-fullscreen object))
+      ('margined
+        (%window-margined object))
+      ('title
+        (%window-title object))
+      (t
+        (call-next-method)))
     (call-next-method)))
 
 (defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object window) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
-    (let ((handle (handle object)))
-      (switch ((closer-mop:slot-definition-name slot) :test #'equal)
-        ('fullscreen
-          (%window-set-fullscreen handle new-value))
-        ('margined
-          (%window-set-margined handle new-value))
-        ('title
-          (%window-set-title handle new-value))
-        (t
-          (call-next-method))))
+    (switch ((closer-mop:slot-definition-name slot) :test #'equal)
+      ('fullscreen
+        (%window-set-fullscreen object new-value))
+      ('margined
+        (%window-set-margined object new-value))
+      ('title
+        (%window-set-title object new-value))
+      (t
+        (call-next-method)))
     (call-next-method)))
