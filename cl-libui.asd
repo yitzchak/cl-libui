@@ -16,5 +16,6 @@
          (:file "core")
          (:file "control")
          (:file "box")
+         (:file "button")
          (:file "tab")
          (:file "window")))))

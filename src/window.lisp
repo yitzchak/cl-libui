@@ -1,5 +1,16 @@
 (in-package #:ui)
 
+(defgeneric on-closing (control)
+  (:documentation "Called to confirm close signal."))
+
+(defmethod on-closing (control)
+  (declare (ignore control))
+  t)
+
+(cffi:defcallback on-closing-callback (:boolean :int) ((control :pointer) (data :pointer))
+  (declare (ignore data))
+  (on-closing control))
+
 (defclass window (control)
   ((child
      :accessor child
@@ -22,11 +33,13 @@
   (:metaclass control-metaclass))
 
 (defmethod initialize-instance :before ((instance window) &rest initargs &key &allow-other-keys)
-  (setf (handle instance)
-        (%new-window (getf initargs :title)
-                     (getf initargs :width)
-                     (getf initargs :height)
-                     (getf initargs :has-menubar))))
+  (with-slots (handle) instance
+    (setf handle
+          (%new-window (getf initargs :title)
+                       (getf initargs :width)
+                       (getf initargs :height)
+                       (getf initargs :has-menubar)))
+    (%window-on-closing handle (cffi:callback on-closing-callback) (cffi:null-pointer))))
 
 (defmethod (setf child) :after (new-value (object window))
   (when new-value
