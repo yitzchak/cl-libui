@@ -8,6 +8,7 @@
     #:child
     #:control
     #:enabled
+    #:form
     #:group
     #:horizontal-box
     #:horizontal-separator

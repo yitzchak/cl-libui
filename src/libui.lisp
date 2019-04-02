@@ -1173,21 +1173,21 @@
 (cffi:defcfun ("uiNewColorButton" %new-color-button) :pointer)
 
 (cffi:defcfun ("uiFormAppend" %form-append) :void
-  (f :pointer)
+  (f control-type)
   (label :string)
-  (c :pointer)
+  (c control-type)
   (stretchy :int))
 
 (cffi:defcfun ("uiFormDelete" %form-delete) :void
-  (f :pointer)
+  (f control-type)
   (index :int))
 
-(cffi:defcfun ("uiFormPadded" %form-padded) :int
-  (f :pointer))
+(cffi:defcfun ("uiFormPadded" %form-padded) (:boolean :int)
+  (f control-type))
 
 (cffi:defcfun ("uiFormSetPadded" %form-set-padded) :void
-  (f :pointer)
-  (padded :int))
+  (f control-type)
+  (padded (:boolean :int)))
 
 (cffi:defcfun ("uiNewForm" %new-form) :pointer)
 
