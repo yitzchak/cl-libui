@@ -18,6 +18,7 @@
          (:file "box")
          (:file "button")
          (:file "checkbox")
+         (:file "entry")
          (:file "form")
          (:file "group")
          (:file "label")

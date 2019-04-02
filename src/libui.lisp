@@ -1176,7 +1176,7 @@
   (f control-type)
   (label :string)
   (c control-type)
-  (stretchy :int))
+  (stretchy (:boolean :int)))
 
 (cffi:defcfun ("uiFormDelete" %form-delete) :void
   (f control-type)

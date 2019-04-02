@@ -8,6 +8,7 @@
     #:child
     #:control
     #:enabled
+    #:entry
     #:form
     #:group
     #:horizontal-box
@@ -15,10 +16,15 @@
     #:label
     #:main
     #:margined
+    #:multiline-entry
+    #:non-wrapping-multiline-entry
+    #:on-changed
     #:on-closing
     #:on-init
     #:on-should-quit
     #:padded
+    #:password-entry
+    #:search-entry
     #:tab
     #:text
     #:title
