@@ -6,6 +6,7 @@
     (ui:append-child vbox hbox)
     (ui:append-child hbox (make-instance 'ui:button :text "Button"))
     (ui:append-child hbox (make-instance 'ui:checkbox :text "Checkbox"))
+    (ui:append-child vbox (make-instance 'ui:label :text "This is a label. Right now, labels can only span one line."))
     vbox))
 
 (defun make-numbers-page ()

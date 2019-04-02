@@ -9,6 +9,7 @@
     #:control
     #:enabled
     #:horizontal-box
+    #:label
     #:main
     #:margined
     #:on-closing

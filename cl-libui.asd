@@ -18,5 +18,6 @@
          (:file "box")
          (:file "button")
          (:file "checkbox")
+         (:file "label")
          (:file "tab")
          (:file "window")))))
