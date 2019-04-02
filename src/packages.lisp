@@ -3,6 +3,8 @@
   (:export
     #:append-child
     #:button
+    #:checkbox
+    #:checked
     #:child
     #:control
     #:enabled

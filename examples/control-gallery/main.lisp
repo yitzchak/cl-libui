@@ -5,6 +5,7 @@
         (hbox (make-instance 'ui:horizontal-box :padded t)))
     (ui:append-child vbox hbox)
     (ui:append-child hbox (make-instance 'ui:button :text "Button"))
+    (ui:append-child hbox (make-instance 'ui:checkbox :text "Checkbox"))
     vbox))
 
 (defun make-numbers-page ()
