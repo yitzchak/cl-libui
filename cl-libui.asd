@@ -22,6 +22,7 @@
          (:file "form")
          (:file "group")
          (:file "label")
+         (:file "range")
          (:file "separator")
          (:file "tab")
          (:file "window")))))

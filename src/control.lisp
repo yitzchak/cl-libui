@@ -63,3 +63,13 @@
 (defmethod closer-mop:slot-boundp-using-class ((class control-metaclass) object (slot closer-mop:standard-effective-slot-definition))
   (or (eql :ui-instance (closer-mop:slot-definition-allocation slot))
       (call-next-method)))
+
+(defgeneric on-changed (control)
+  (:documentation "Called on change signal."))
+
+(defmethod on-changed (control)
+  (declare (ignore control)))
+
+(cffi:defcallback on-changed-callback :void ((control control-type) (data :pointer))
+  (declare (ignore data))
+  (on-changed control))

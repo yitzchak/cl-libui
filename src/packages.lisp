@@ -24,10 +24,14 @@
     #:on-should-quit
     #:padded
     #:password-entry
+    #:progress-bar
     #:search-entry
+    #:slider
+    #:spinbox
     #:tab
     #:text
     #:title
+    #:value
     #:vertical-box
     #:vertical-separator
     #:visible

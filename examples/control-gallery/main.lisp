@@ -1,5 +1,20 @@
 (ql:quickload :cl-libui)
 
+(defparameter *slider* nil)
+(defparameter *spinbox* nil)
+(defparameter *progress-bar* nil)
+
+(defmethod ui:on-changed (control)
+  (cond
+    ((eql control *slider*)
+      (let ((value (ui:value control)))
+        (setf (ui:value *spinbox*) value)
+        (setf (ui:value *progress-bar*) value)))
+    ((eql control *spinbox*)
+      (let ((value (ui:value control)))
+        (setf (ui:value *slider*) value)
+        (setf (ui:value *progress-bar*) value)))))
+
 (defun make-basic-controls-page ()
   (let ((vbox (make-instance 'ui:vertical-box :padded t))
         (hbox (make-instance 'ui:horizontal-box :padded t))
@@ -20,8 +35,19 @@
     vbox))
 
 (defun make-numbers-page ()
-  (let ((vbox (make-instance 'ui:vertical-box :padded t)))
-    vbox))
+  (let ((vbox (make-instance 'ui:vertical-box :padded t))
+        (hbox (make-instance 'ui:horizontal-box :padded t))
+        (group (make-instance 'ui:group :title "Numbers" :margined t)))
+    (ui:append-child hbox group :stretch t)
+    (setf (ui:child group) vbox)
+    (setq *spinbox* (make-instance 'ui:spinbox :min 0 :max 100))
+    (ui:append-child vbox *spinbox*)
+    (setq *slider* (make-instance 'ui:slider :min 0 :max 100))
+    (ui:append-child vbox *slider*)
+    (setq *progress-bar* (make-instance 'ui:progress-bar))
+    (ui:append-child vbox *progress-bar*)
+    (ui:append-child vbox (make-instance 'ui:progress-bar :value -1))
+    hbox))
 
 (defun make-data-choosers-page ()
   (let ((vbox (make-instance 'ui:vertical-box :padded t)))
