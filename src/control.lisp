@@ -73,3 +73,9 @@
 (cffi:defcallback on-changed-callback :void ((control control-type) (data :pointer))
   (declare (ignore data))
   (on-changed control))
+
+(defgeneric append-child (object child &rest options &key &allow-other-keys))
+
+(defgeneric append-text (object item &rest options &key &allow-other-keys))
+
+(defgeneric append-item (object item &rest options &key &allow-other-keys))

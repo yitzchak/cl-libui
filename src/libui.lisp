@@ -443,7 +443,7 @@
   (c control-type)
   (text :string))
 
-(cffi:defcfun ("uiEditableComboboxOnChanged" %editable-combobox-onChanged) :void
+(cffi:defcfun ("uiEditableComboboxOnChanged" %editable-combobox-on-changed) :void
   (c control-type)
   (f :pointer)
   (data :pointer))

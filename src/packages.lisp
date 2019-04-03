@@ -2,11 +2,15 @@
   (:use #:alexandria #:cl)
   (:export
     #:append-child
+    #:append-item
+    #:append-text
     #:button
     #:checkbox
     #:checked
     #:child
+    #:combobox
     #:control
+    #:editable-combobox
     #:enabled
     #:entry
     #:form
@@ -25,7 +29,9 @@
     #:padded
     #:password-entry
     #:progress-bar
+    #:radio-buttons
     #:search-entry
+    #:selected
     #:slider
     #:spinbox
     #:tab

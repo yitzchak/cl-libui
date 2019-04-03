@@ -110,3 +110,7 @@
   (setf (handle instance)
         (%new-non-wrapping-multiline-entry))
   (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+
+(defmethod append-text ((object multiline-base-entry) text &rest options &key &allow-other-keys)
+  (declare (ignore options))
+  (%multiline-entry-append object text))
