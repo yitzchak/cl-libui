@@ -69,8 +69,13 @@
     hbox))
 
 (defun make-data-choosers-page ()
-  (let ((vbox (make-instance 'ui:vertical-box :padded t)))
-    vbox))
+  (let ((hbox (make-instance 'ui:horizontal-box :padded t))
+        (vbox (make-instance 'ui:vertical-box :padded t)))
+    (ui:append-child hbox vbox)
+    (ui:append-child vbox (make-instance 'ui:date-time-picker))
+    (ui:append-child vbox (make-instance 'ui:date-picker))
+    (ui:append-child vbox (make-instance 'ui:time-picker))
+    hbox))
 
 (defmethod ui:on-init ()
   (let ((tab (make-instance 'ui:tab)))

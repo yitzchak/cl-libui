@@ -10,6 +10,8 @@
     #:child
     #:combobox
     #:control
+    #:date-picker
+    #:date-time-picker
     #:editable-combobox
     #:enabled
     #:entry
@@ -36,6 +38,7 @@
     #:spinbox
     #:tab
     #:text
+    #:time-picker
     #:title
     #:value
     #:vertical-box

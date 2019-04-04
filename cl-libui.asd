@@ -18,6 +18,7 @@
          (:file "box")
          (:file "button")
          (:file "checkbox")
+         (:file "date-time-picker")
          (:file "entry")
          (:file "form")
          (:file "group")

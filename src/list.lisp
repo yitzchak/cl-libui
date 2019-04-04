@@ -33,6 +33,7 @@
   (%combobox-on-selected instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defmethod append-item ((object combobox) item &rest options &key &allow-other-keys)
+  (declare (ignore options))
   (%combobox-append object item))
 
 (defclass radio-buttons (control)
@@ -68,6 +69,7 @@
   (%radio-buttons-on-selected instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defmethod append-item ((object radio-buttons) item &rest options &key &allow-other-keys)
+  (declare (ignore options))
   (%radio-buttons-append object item))
 
 (defclass editable-combobox (control)
@@ -103,4 +105,5 @@
   (%editable-combobox-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defmethod append-item ((object editable-combobox) item &rest options &key &allow-other-keys)
+  (declare (ignore options))
   (%editable-combobox-append object item))

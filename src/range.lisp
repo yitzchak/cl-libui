@@ -85,5 +85,6 @@
     (call-next-method)))
 
 (defmethod initialize-instance :before ((instance progress-bar) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
   (setf (handle instance)
         (%new-progress-bar)))

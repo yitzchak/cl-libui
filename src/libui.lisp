@@ -468,13 +468,24 @@
 
 (cffi:defcfun ("uiNewRadioButtons" %new-radio-buttons) :pointer)
 
-(cffi:defcfun ("uiDateTimePickerTime" %date-time-pickerTime) :void
-  (d control-type)
-  (time :pointer))
+(cffi:defcstruct %tm
+  (sec :int)
+  (min :int)
+  (hour :int)
+  (mday :int)
+  (mon :int)
+  (year :int)
+  (wday :int)
+  (yday :int)
+  (isdst :int))
 
-(cffi:defcfun ("uiDateTimePickerSetTime" %date-time-picker-setTime) :void
+(cffi:defcfun ("uiDateTimePickerTime" %date-time-picker-time) :void
   (d control-type)
-  (time :pointer))
+  (time (:pointer (:struct %tm))))
+
+(cffi:defcfun ("uiDateTimePickerSetTime" %date-time-picker-set-time) :void
+  (d control-type)
+  (time (:pointer (:struct %tm))))
 
 (cffi:defcfun ("uiDateTimePickerOnChanged" %date-time-picker-on-changed) :void
   (d control-type)
