@@ -1117,21 +1117,21 @@
 	(up :int))
 
 (cffi:defcfun ("uiColorButtonColor" %color-button-color) :void
-  (b :pointer)
-  (r :pointer)
-  (g :pointer)
-  (bl :pointer)
-  (a :pointer))
+  (button control-type)
+  (r (:pointer :double))
+  (g (:pointer :double))
+  (b (:pointer :double))
+  (a (:pointer :double)))
 
 (cffi:defcfun ("uiColorButtonSetColor" %color-button-set-color) :void
-  (b :pointer)
+  (button control-type)
   (r :double)
   (g :double)
-  (bl :double)
+  (b :double)
   (a :double))
 
 (cffi:defcfun ("uiColorButtonOnChanged" %color-button-on-changed) :void
-  (b :pointer)
+  (button control-type)
   (f :pointer)
   (data :pointer))
 

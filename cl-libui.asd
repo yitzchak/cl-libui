@@ -18,6 +18,7 @@
          (:file "box")
          (:file "button")
          (:file "checkbox")
+         (:file "color-button")
          (:file "date-time-picker")
          (:file "entry")
          (:file "font-button")

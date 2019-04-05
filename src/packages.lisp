@@ -8,6 +8,8 @@
     #:checkbox
     #:checked
     #:child
+    #:color
+    #:color-button
     #:combobox
     #:control
     #:date-picker
