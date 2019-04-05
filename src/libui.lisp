@@ -526,12 +526,12 @@
 (cffi:defcfun ("uiSaveFile" save-file) :string
   (parent control-type))
 
-(cffi:defcfun ("uiMsgBox" %msg-box) :void
+(cffi:defcfun ("uiMsgBox" message-box) :void
   (parent control-type)
   (title :string)
   (description :string))
 
-(cffi:defcfun ("uiMsgBoxError" %msg-box-error) :void
+(cffi:defcfun ("uiMsgBoxError" error-box) :void
   (parent control-type)
   (title :string)
   (description :string))

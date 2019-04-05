@@ -27,6 +27,8 @@
     #:label
     #:main
     #:margined
+    #:message-box
+    #:error-box
     #:multiline-entry
     #:non-wrapping-multiline-entry
     #:on-changed
@@ -39,6 +41,7 @@
     #:password-entry
     #:progress-bar
     #:radio-buttons
+    #:save-file
     #:search-entry
     #:selected
     #:slider
