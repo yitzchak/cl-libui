@@ -13,7 +13,9 @@
     ((eql control *spinbox*)
       (let ((value (ui:value control)))
         (setf (ui:value *slider*) value)
-        (setf (ui:value *progress-bar*) value)))))
+        (setf (ui:value *progress-bar*) value)))
+    ((typep control 'ui:font-button)
+      (format t "~S~%" (ui:font control)))))
 
 (defun make-basic-controls-page ()
   (let ((vbox (make-instance 'ui:vertical-box :padded t))
@@ -75,6 +77,7 @@
     (ui:append-child vbox (make-instance 'ui:date-time-picker))
     (ui:append-child vbox (make-instance 'ui:date-picker))
     (ui:append-child vbox (make-instance 'ui:time-picker))
+    (ui:append-child vbox (make-instance 'ui:font-button))
     hbox))
 
 (defmethod ui:on-init ()

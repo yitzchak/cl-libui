@@ -14,55 +14,9 @@
 (cffi:define-parse-method control-type ()
   (make-instance 'control-type))
 
-(cl:defmacro defanonenum (cl:&body enums)
-   "Converts anonymous enums to defconstants."
-  `(cl:progn ,@(cl:loop for value in enums
-                        for index = 0 then (cl:1+ index)
-                        when (cl:listp value) do (cl:setf index (cl:second value)
-                                                          value (cl:first value))
-                        collect `(cl:defconstant ,value ,index))))
-
-(cl:eval-when (:compile-toplevel :load-toplevel)
-  (cl:unless (cl:fboundp 'swig-lispify)
-    (cl:defun swig-lispify (name flag cl:&optional (package cl:*package*))
-      (cl:labels ((helper (lst last rest cl:&aux (c (cl:car lst)))
-                    (cl:cond
-                      ((cl:null lst)
-                       rest)
-                      ((cl:upper-case-p c)
-                       (helper (cl:cdr lst) 'upper
-                               (cl:case last
-                                 ((lower digit) (cl:list* c #\- rest))
-                                 (cl:t (cl:cons c rest)))))
-                      ((cl:lower-case-p c)
-                       (helper (cl:cdr lst) 'lower (cl:cons (cl:char-upcase c) rest)))
-                      ((cl:digit-char-p c)
-                       (helper (cl:cdr lst) 'digit
-                               (cl:case last
-                                 ((upper lower) (cl:list* c #\- rest))
-                                 (cl:t (cl:cons c rest)))))
-                      ((cl:char-equal c #\_)
-                       (helper (cl:cdr lst) '_ (cl:cons #\- rest)))
-                      (cl:t
-                       (cl:error "Invalid character: ~A" c)))))
-        (cl:let ((fix (cl:case flag
-                        ((constant enumvalue) "+")
-                        (variable "*")
-                        (cl:t ""))))
-          (cl:intern
-           (cl:concatenate
-            'cl:string
-            fix
-            (cl:nreverse (helper (cl:concatenate 'cl:list name) cl:nil cl:nil))
-            fix)
-           package))))))
-
-;;;SWIG wrapper code ends here
-
-
-(defanonenum
-	uiForEachContinue
-	uiForEachStop)
+(cffi:defcenum (%for-each :unsigned-int)
+	:for-each-continue
+	:for-each-stop)
 
 (cffi:defcstruct %init-options
 	(size :ulong))
@@ -583,21 +537,21 @@
   (description :string))
 
 (cffi:defcstruct %area-handler
-	(Draw :pointer)
-	(MouseEvent :pointer)
-	(MouseCrossed :pointer)
-	(DragBroken :pointer)
-	(KeyEvent :pointer))
+	(:draw :pointer)
+	(:mouse-event :pointer)
+	(:mouse-crossed :pointer)
+	(:drag-broken :pointer)
+	(:key-event :pointer))
 
-(defanonenum
-	uiWindowResizeEdgeLeft
-	uiWindowResizeEdgeTop
-	uiWindowResizeEdgeRight
-	uiWindowResizeEdgeBottom
-	uiWindowResizeEdgeTopLeft
-	uiWindowResizeEdgeTopRight
-	uiWindowResizeEdgeBottomLeft
-	uiWindowResizeEdgeBottomRight)
+(cffi:defcenum (%window-resize-edge :unsigned-int)
+	:window-resize-edge-left
+	:window-resize-edge-top
+	:window-resize-edge-right
+	:window-resize-edge-bottom
+	:window-resize-edge-top-left
+	:window-resize-edge-top-right
+	:window-resize-edge-bottom-left
+	:window-resize-edge-bottom-right)
 
 (cffi:defcfun ("uiAreaSetSize" %area-set-size) :void
   (a control-type)
@@ -630,76 +584,76 @@
   (height :int))
 
 (cffi:defcstruct %area-draw-params
-	(Context :pointer)
-	(AreaWidth :double)
-	(AreaHeight :double)
-	(ClipX :double)
-	(ClipY :double)
-	(ClipWidth :double)
-	(ClipHeight :double))
+	(context :pointer)
+	(area-width :double)
+	(area-height :double)
+	(clip-x :double)
+	(clip-y :double)
+	(clip-width :double)
+	(clip-height :double))
 
-(defanonenum
-	uiDrawBrushTypeSolid
-	uiDrawBrushTypeLinearGradient
-	uiDrawBrushTypeRadialGradient
-	uiDrawBrushTypeImage)
+(cffi:defcenum (%draw-brush-type :unsigned-int)
+	:draw-brush-type-solid
+	:draw-brush-type-linear-gradient
+	:draw-brush-type-radial-gradient
+	:draw-brush-type-image)
 
-(defanonenum
-	uiDrawLineCapFlat
-	uiDrawLineCapRound
-	uiDrawLineCapSquare)
+(cffi:defcenum (%draw-line-cap :unsigned-int)
+	:draw-line-cap-flat
+	:draw-line-cap-round
+	:draw-line-cap-square)
 
-(defanonenum
-	uiDrawLineJoinMiter
-	uiDrawLineJoinRound
-	uiDrawLineJoinBevel)
+(cffi:defcenum (%draw-line-join :unsigned-int)
+	:draw-line-join-miter
+	:draw-line-join-round
+	:draw-line-join-bevel)
 
 (cl:defconstant %draw-default-miter-limit 10.0d0)
 
-(defanonenum
-	uiDrawFillModeWinding
-	uiDrawFillModeAlternate)
+(cffi:defcenum (%draw-file-mode :unsigned-int)
+	:draw-fill-mode-winding
+	:draw-fill-mode-alternate)
 
 (cffi:defcstruct %draw-matrix
-	(M11 :double)
-	(M12 :double)
-	(M21 :double)
-	(M22 :double)
-	(M31 :double)
-	(M32 :double))
+	(m11 :double)
+	(m12 :double)
+	(m21 :double)
+	(m22 :double)
+	(m31 :double)
+	(m32 :double))
 
 (cffi:defcstruct %draw-brush
-	(Type :unsigned-int)
-	(R :double)
-	(G :double)
-	(B :double)
-	(A :double)
-	(X0 :double)
-	(Y0 :double)
-	(X1 :double)
-	(Y1 :double)
-	(OuterRadius :double)
-	(Stops :pointer)
-	(NumStops :pointer))
+	(type %draw-brush-type)
+	(r :double)
+	(g :double)
+	(b :double)
+	(a :double)
+	(x0 :double)
+	(y0 :double)
+	(x1 :double)
+	(y1 :double)
+	(outer-radius :double)
+	(stops :pointer)
+	(num-stops :pointer))
 
 (cffi:defcstruct %draw-brush-gradient-stop
-	(Pos :double)
-	(R :double)
-	(G :double)
-	(B :double)
+	(pos :double)
+	(r :double)
+	(g :double)
+	(b :double)
 	(A :double))
 
 (cffi:defcstruct %draw-stroke-params
-	(Cap :unsigned-int)
-	(Join :unsigned-int)
-	(Thickness :double)
-	(MiterLimit :double)
-	(Dashes :pointer)
-	(NumDashes :pointer)
-	(DashPhase :double))
+	(cap %draw-line-cap)
+	(join %draw-line-join)
+	(thickness :double)
+	(miter-limit :double)
+	(dashes :pointer)
+	(num-dashes :pointer)
+	(dash-phase :double))
 
 (cffi:defcfun ("uiDrawNewPath" %draw-new-path) :pointer
-  (fillMode :unsigned-int))
+  (fill-mode :unsigned-int))
 
 (cffi:defcfun ("uiDrawFreePath" %draw-free-path) :void
   (p :pointer))
@@ -711,10 +665,10 @@
 
 (cffi:defcfun ("uiDrawPathNewFigureWithArc" %draw-path-new-figure-with-arc) :void
   (p :pointer)
-  (xCenter :double)
-  (yCenter :double)
+  (x-center :double)
+  (y-center :double)
   (radius :double)
-  (startAngle :double)
+  (start-angle :double)
   (sweep :double)
   (negative :int))
 
@@ -725,10 +679,10 @@
 
 (cffi:defcfun ("uiDrawPathArcTo" %draw-path-arc-to) :void
   (p :pointer)
-  (xCenter :double)
-  (yCenter :double)
+  (x-center :double)
+  (y-center :double)
   (radius :double)
-  (startAngle :double)
+  (start-angle :double)
   (sweep :double)
   (negative :int))
 
@@ -738,8 +692,8 @@
   (c1y :double)
   (c2x :double)
   (c2y :double)
-  (endX :double)
-  (endY :double))
+  (end-x :double)
+  (end-y :double))
 
 (cffi:defcfun ("uiDrawPathCloseFigure" %draw-path-close-figure) :void
   (p :pointer))
@@ -775,8 +729,8 @@
 
 (cffi:defcfun ("uiDrawMatrixScale" %draw-matrix-scale) :void
   (m :pointer)
-  (xCenter :double)
-  (yCenter :double)
+  (x-center :double)
+  (y-center :double)
   (x :double)
   (y :double))
 
@@ -830,17 +784,17 @@
 (cffi:defcfun ("uiFreeAttribute" %free-attribute) :void
   (a :pointer))
 
-(defanonenum
-	uiAttributeTypeFamily
-	uiAttributeTypeSize
-	uiAttributeTypeWeight
-	uiAttributeTypeItalic
-	uiAttributeTypeStretch
-	uiAttributeTypeColor
-	uiAttributeTypeBackground
-	uiAttributeTypeUnderline
-	uiAttributeTypeUnderlineColor
-	uiAttributeTypeFeatures)
+(cffi:defcenum (%attribute-type :unsigned-int)
+	:attribute-type-family
+	:attribute-type-size
+	:attribute-type-weight
+	:attribute-type-italic
+	:attribute-type-stretch
+	:attribute-type-color
+	:attribute-type-background
+	:attribute-type-underline
+	:attribute-type-underline-color
+	:attribute-type-features)
 
 (cffi:defcfun ("uiAttributeGetType" %attribute-get-type) :unsigned-int
   (a :pointer))
@@ -857,53 +811,53 @@
 (cffi:defcfun ("uiAttributeSize" %attribute-size) :double
   (a :pointer))
 
-(defanonenum
-	(uiTextWeightMinimum #.0)
-	(uiTextWeightThin #.100)
-	(uiTextWeightUltraLight #.200)
-	(uiTextWeightLight #.300)
-	(uiTextWeightBook #.350)
-	(uiTextWeightNormal #.400)
-	(uiTextWeightMedium #.500)
-	(uiTextWeightSemiBold #.600)
-	(uiTextWeightBold #.700)
-	(uiTextWeightUltraBold #.800)
-	(uiTextWeightHeavy #.900)
-	(uiTextWeightUltraHeavy #.950)
-	(uiTextWeightMaximum #.1000))
+(cffi:defcenum (%text-weight :unsigned-int)
+	(:text-weight-minimum 0)
+	(:text-weight-thin 100)
+	(:text-weight-ultra-light 200)
+	(:text-weight-light 300)
+	(:text-weight-book 350)
+	(:text-weight-normal 400)
+	(:text-weight-medium 500)
+	(:text-weight-semi-bold 600)
+	(:text-weight-bold 700)
+	(:text-weight-ultra-bold 800)
+	(:text-weight-heavy 900)
+	(:text-weight-ultra-heavy 950)
+	(:text-weight-maximum 1000))
 
 (cffi:defcfun ("uiNewWeightAttribute" %new-weight-attribute) :pointer
-  (weight :unsigned-int))
+  (weight %text-weight))
 
-(cffi:defcfun ("uiAttributeWeight" %attribute-weight) :unsigned-int
+(cffi:defcfun ("uiAttributeWeight" %attribute-weight) %text-weight
   (a :pointer))
 
-(defanonenum
-	uiTextItalicNormal
-	uiTextItalicOblique
-	uiTextItalicItalic)
+(cffi:defcenum (%text-italic :unsigned-int)
+	:text-italic-normal
+	:text-italic-oblique
+	:text-italic-italic)
 
 (cffi:defcfun ("uiNewItalicAttribute" %new-italic-attribute) :pointer
-  (italic :unsigned-int))
+  (italic %text-italic))
 
-(cffi:defcfun ("uiAttributeItalic" %attribute-italic) :unsigned-int
+(cffi:defcfun ("uiAttributeItalic" %attribute-italic) %text-italic
   (a :pointer))
 
-(defanonenum
-	uiTextStretchUltraCondensed
-	uiTextStretchExtraCondensed
-	uiTextStretchCondensed
-	uiTextStretchSemiCondensed
-	uiTextStretchNormal
-	uiTextStretchSemiExpanded
-	uiTextStretchExpanded
-	uiTextStretchExtraExpanded
-	uiTextStretchUltraExpanded)
+(cffi:defcenum (%text-stretch :unsigned-int)
+	:text-stretch-ultra-condensed
+	:text-stretch-extra-condensed
+	:text-stretch-condensed
+	:text-stretch-semi-condensed
+	:text-stretch-normal
+	:text-stretch-semi-expanded
+	:text-stretch-expanded
+	:text-stretch-extra-expanded
+	:text-stretch-ultra-expanded)
 
 (cffi:defcfun ("uiNewStretchAttribute" %new-stretch-attribute) :pointer
-  (stretch :unsigned-int))
+  (stretch %text-stretch))
 
-(cffi:defcfun ("uiAttributeStretch" %attribute-stretch) :unsigned-int
+(cffi:defcfun ("uiAttributeStretch" %attribute-stretch) %text-stretch
   (a :pointer))
 
 (cffi:defcfun ("uiNewColorAttribute" %new-color-attribute) :pointer
@@ -914,10 +868,10 @@
 
 (cffi:defcfun ("uiAttributeColor" %attribute-color) :void
   (a :pointer)
-  (r :pointer)
-  (g :pointer)
-  (b :pointer)
-  (alpha :pointer))
+  (r (:pointer :double))
+  (g (:pointer :double))
+  (b (:pointer :double))
+  (alpha (:pointer :double)))
 
 (cffi:defcfun ("uiNewBackgroundAttribute" %new-background-attribute) :pointer
   (r :double)
@@ -925,11 +879,11 @@
   (b :double)
   (a :double))
 
-(defanonenum
-	uiUnderlineNone
-	uiUnderlineSingle
-	uiUnderlineDouble
-	uiUnderlineSuggestion)
+(cffi:defcenum (%underline :unsigned-int)
+	:underline-none
+	:underline-single
+	:underline-double
+	:underline-suggestion)
 
 (cffi:defcfun ("uiNewUnderlineAttribute" %new-underline-attribute) :pointer
   (u :unsigned-int))
@@ -937,14 +891,14 @@
 (cffi:defcfun ("uiAttributeUnderline" %attribute-underline) :unsigned-int
   (a :pointer))
 
-(defanonenum
-	uiUnderlineColorCustom
-	uiUnderlineColorSpelling
-	uiUnderlineColorGrammar
-	uiUnderlineColorAuxiliary)
+(cffi:defcenum (%underline-color :unsigned-int)
+	:underline-color-custom
+	:underline-color-spelling
+	:underline-color-grammar
+	:underline-color-auxiliary)
 
 (cffi:defcfun ("uiNewUnderlineColorAttribute" %new-underline-color-attribute) :pointer
-  (u :unsigned-int)
+  (u %underline-color)
   (r :double)
   (g :double)
   (b :double)
@@ -952,11 +906,11 @@
 
 (cffi:defcfun ("uiAttributeUnderlineColor" %attribute-underline-color) :void
   (a :pointer)
-  (u :pointer)
-  (r :pointer)
-  (g :pointer)
-  (b :pointer)
-  (alpha :pointer))
+  (u (:pointer %underline-color))
+  (r (:pointer :double))
+  (g (:pointer :double))
+  (b (:pointer :double))
+  (alpha (:pointer :double)))
 
 (cffi:defcfun ("uiNewOpenTypeFeatures" %new-open-type-features) :pointer)
 
@@ -1001,7 +955,7 @@
   (a :pointer))
 
 (cffi:defcfun ("uiNewAttributedString" %new-attributed-string) :pointer
-  (initialString :string))
+  (initial-string :string))
 
 (cffi:defcfun ("uiFreeAttributedString" %free-attributed-string) :void
   (s :pointer))
@@ -1049,22 +1003,22 @@
   (pos :pointer))
 
 (cffi:defcstruct %font-descriptor
-	(Family :string)
-	(Size :double)
-	(Weight :unsigned-int)
-	(Italic :unsigned-int)
-	(Stretch :unsigned-int))
+	(:family :string)
+	(:size :double)
+	(:weight %text-weight)
+	(:italic %text-italic)
+	(:stretch %text-stretch))
 
-(defanonenum
-	uiDrawTextAlignLeft
-	uiDrawTextAlignCenter
-	uiDrawTextAlignRight)
+(cffi:defcenum (%draw-text-align :unsigned-int)
+	%draw-text-align-left
+	%draw-text-align-center
+	%draw-text-align-right)
 
 (cffi:defcstruct %draw-text-layout-params
-	(String :pointer)
-	(DefaultFont :pointer)
-	(Width :double)
-	(Align :unsigned-int))
+	(string :pointer)
+	(defaultFont :pointer)
+	(width :double)
+	(align %draw-text-align))
 
 (cffi:defcfun ("uiDrawNewTextLayout" %draw-new-text-layout) :pointer
   (params :pointer))
@@ -1084,83 +1038,83 @@
   (height :pointer))
 
 (cffi:defcfun ("uiFontButtonFont" %font-button-font) :void
-  (b :pointer)
-  (desc :pointer))
+  (b control-type)
+  (desc (:pointer (:struct %font-descriptor))))
 
 (cffi:defcfun ("uiFontButtonOnChanged" %font-button-on-changed) :void
-  (b :pointer)
+  (b control-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiNewFontButton" %new-font-button) :pointer)
 
 (cffi:defcfun ("uiFreeFontButtonFont" %free-font-button-font) :void
-  (desc :pointer))
+  (desc (:pointer (:struct %font-descriptor))))
 
-(defanonenum
-	(uiModifierCtrl #.(cl:ash 1 0))
-	(uiModifierAlt #.(cl:ash 1 1))
-	(uiModifierShift #.(cl:ash 1 2))
-	(uiModifierSuper #.(cl:ash 1 3)))
+(cffi:defcenum (%modifiers :unsigned-int)
+	(:modifier-ctrl #.(cl:ash 1 0))
+	(:modifier-alt #.(cl:ash 1 1))
+	(:modifier-shift #.(cl:ash 1 2))
+	(:modifier-super #.(cl:ash 1 3)))
 
 (cffi:defcstruct %area-mouse-event
-	(X :double)
-	(Y :double)
-	(AreaWidth :double)
-	(AreaHeight :double)
-	(Down :int)
-	(Up :int)
-	(Count :int)
-	(Modifiers :unsigned-int)
-	(Held1To64 :pointer))
+	(x :double)
+	(y :double)
+	(area-width :double)
+	(area-height :double)
+	(down :int)
+	(up :int)
+	(count :int)
+	(modifiers %modifiers)
+	(held1to64 :pointer))
 
-(defanonenum
-	(uiExtKeyEscape #.1)
-	uiExtKeyInsert
-	uiExtKeyDelete
-	uiExtKeyHome
-	uiExtKeyEnd
-	uiExtKeyPageUp
-	uiExtKeyPageDown
-	uiExtKeyUp
-	uiExtKeyDown
-	uiExtKeyLeft
-	uiExtKeyRight
-	uiExtKeyF1
-	uiExtKeyF2
-	uiExtKeyF3
-	uiExtKeyF4
-	uiExtKeyF5
-	uiExtKeyF6
-	uiExtKeyF7
-	uiExtKeyF8
-	uiExtKeyF9
-	uiExtKeyF10
-	uiExtKeyF11
-	uiExtKeyF12
-	uiExtKeyN0
-	uiExtKeyN1
-	uiExtKeyN2
-	uiExtKeyN3
-	uiExtKeyN4
-	uiExtKeyN5
-	uiExtKeyN6
-	uiExtKeyN7
-	uiExtKeyN8
-	uiExtKeyN9
-	uiExtKeyNDot
-	uiExtKeyNEnter
-	uiExtKeyNAdd
-	uiExtKeyNSubtract
-	uiExtKeyNMultiply
-	uiExtKeyNDivide)
+(cffi:defcenum (%ext-key :unsigned-int)
+	(:ext-key-escape 1)
+	:ext-key-insert
+	:ext-key-delete
+	:ext-key-home
+	:ext-key-end
+	:ext-key-page-up
+	:ext-key-page-down
+	:ext-key-up
+	:ext-key-down
+	:ext-key-left
+	:ext-key-right
+	:ext-key-f1
+	:ext-key-f2
+	:ext-key-f3
+	:ext-key-f4
+	:ext-key-f5
+	:ext-key-f6
+	:ext-key-f7
+	:ext-key-f8
+	:ext-key-f9
+	:ext-key-f10
+	:ext-key-f11
+	:ext-key-f12
+	:ext-key-n0
+	:ext-key-n1
+	:ext-key-n2
+	:ext-key-n3
+	:ext-key-n4
+	:ext-key-n5
+	:ext-key-n6
+	:ext-key-n7
+	:ext-key-n8
+	:ext-key-n9
+	:ext-key-n-dot
+	:ext-key-n-enter
+	:ext-key-n-add
+	:ext-key-n-subtract
+	:ext-key-n-multiply
+	:ext-key-n-divide)
 
 (cffi:defcstruct %area-key-event
-	(Key :char)
-	(ExtKey :unsigned-int)
-	(Modifier :unsigned-int)
-	(Modifiers :unsigned-int)
-	(Up :int))
+	(key :char)
+	(ext-key %ext-key)
+	(modifier :unsigned-int)
+	(modifiers :unsigned-int)
+	(up :int))
 
 (cffi:defcfun ("uiColorButtonColor" %color-button-color) :void
   (b :pointer)
@@ -1202,17 +1156,17 @@
 
 (cffi:defcfun ("uiNewForm" %new-form) :pointer)
 
-(defanonenum
-	uiAlignFill
-	uiAlignStart
-	uiAlignCenter
-	uiAlignEnd)
+(cffi:defcenum (%align :unsigned-int)
+	:align-fill
+	:align-start
+	:align-center
+	:align-end)
 
-(defanonenum
-	uiAtLeading
-	uiAtTop
-	uiAtTrailing
-	uiAtBottom)
+(cffi:defcenum (%at :unsigned-int)
+	:at-leading
+	:at-top
+	:at-trailing
+	:at-bottom)
 
 (cffi:defcfun ("uiGridAppend" %grid-append) :void
   (g :pointer)
@@ -1257,18 +1211,18 @@
 (cffi:defcfun ("uiImageAppend" %image-append) :void
   (i :pointer)
   (pixels :pointer)
-  (pixelWidth :int)
-  (pixelHeight :int)
-  (byteStride :int))
+  (pixel-width :int)
+  (pixel-height :int)
+  (byte-stride :int))
 
 (cffi:defcfun ("uiFreeTableValue" %free-table-value) :void
   (v :pointer))
 
-(defanonenum
-	uiTableValueTypeString
-	uiTableValueTypeImage
-	uiTableValueTypeInt
-	uiTableValueTypeColor)
+(cffi:defcenum (%table-value-type :unsigned-int)
+	:table-value-type-string
+	:table-value-type-image
+	:table-value-type-int
+	:table-value-type-color)
 
 (cffi:defcfun ("uiTableValueGetType" %table-value-get-type) :unsigned-int
   (v :pointer))
@@ -1305,11 +1259,11 @@
   (a :pointer))
 
 (cffi:defcstruct %table-model-handler
-	(NumColumns :pointer)
-	(ColumnType :pointer)
-	(NumRows :pointer)
-	(CellValue :pointer)
-	(SetCellValue :pointer))
+	(num-columns :pointer)
+	(column-type :pointer)
+	(num-rows :pointer)
+	(cell-value :pointer)
+	(set-cell-value :pointer))
 
 (cffi:defcfun ("uiNewTableModel" %new-table-model) :pointer
   (mh :pointer))
@@ -1319,7 +1273,7 @@
 
 (cffi:defcfun ("uiTableModelRowInserted" %table-model-row-inserted) :void
   (m :pointer)
-  (newIndex :int))
+  (new-index :int))
 
 (cffi:defcfun ("uiTableModelRowChanged" %table-model-row-changed) :void
   (m :pointer)
@@ -1327,64 +1281,64 @@
 
 (cffi:defcfun ("uiTableModelRowDeleted" %table-model-row-deleted) :void
   (m :pointer)
-  (oldIndex :int))
+  (old-index :int))
 
 (cl:defconstant %table-model-column-never-editable -1)
 
 (cl:defconstant %table-model-column-always-editable -2)
 
 (cffi:defcstruct %table-text-column-optional-params
-	(ColorModelColumn :int))
+	(color-model-column :int))
 
 (cffi:defcstruct %table-params
-	(Model :pointer)
-	(RowBackgroundColorModelColumn :int))
+	(model :pointer)
+	(row-background-color-model-column :int))
 
 (cffi:defcfun ("uiTableAppendTextColumn" %table-append-text-column) :void
   (t_arg0 :pointer)
   (name :string)
-  (textModelColumn :int)
-  (textEditableModelColumn :int)
-  (textParams :pointer))
+  (text-model-column :int)
+  (text-editable-model-column :int)
+  (text-params :pointer))
 
 (cffi:defcfun ("uiTableAppendImageColumn" %table-append-image-column) :void
   (t_arg0 :pointer)
   (name :string)
-  (imageModelColumn :int))
+  (image-model-column :int))
 
 (cffi:defcfun ("uiTableAppendImageTextColumn" %table-append-image-text-column) :void
   (t_arg0 :pointer)
   (name :string)
-  (imageModelColumn :int)
-  (textModelColumn :int)
-  (textEditableModelColumn :int)
-  (textParams :pointer))
+  (image-model-column :int)
+  (text-model-column :int)
+  (text-editable-model-column :int)
+  (text-params :pointer))
 
 (cffi:defcfun ("uiTableAppendCheckboxColumn" %table-append-checkboxColumn) :void
   (t_arg0 :pointer)
   (name :string)
-  (checkboxModelColumn :int)
-  (checkboxEditableModelColumn :int))
+  (checkbox-model-column :int)
+  (checkbox-editable-model-column :int))
 
 (cffi:defcfun ("uiTableAppendCheckboxTextColumn" %table-append-checkbox-textColumn) :void
   (t_arg0 :pointer)
   (name :string)
-  (checkboxModelColumn :int)
-  (checkboxEditableModelColumn :int)
-  (textModelColumn :int)
-  (textEditableModelColumn :int)
-  (textParams :pointer))
+  (checkbox-model-column :int)
+  (checkbox-editable-model-column :int)
+  (text-model-column :int)
+  (text-editable-model-column :int)
+  (text-params :pointer))
 
 (cffi:defcfun ("uiTableAppendProgressBarColumn" %table-append-progress-bar-column) :void
   (t_arg0 :pointer)
   (name :string)
-  (progressModelColumn :int))
+  (progress-model-column :int))
 
 (cffi:defcfun ("uiTableAppendButtonColumn" %table-append-button-column) :void
   (t_arg0 :pointer)
   (name :string)
-  (buttonModelColumn :int)
-  (buttonClickableModelColumn :int))
+  (button-model-column :int)
+  (button-clickable-model-column :int))
 
 (cffi:defcfun ("uiNewTable" %new-table) :pointer
   (params :pointer))

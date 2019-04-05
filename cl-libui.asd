@@ -20,6 +20,7 @@
          (:file "checkbox")
          (:file "date-time-picker")
          (:file "entry")
+         (:file "font-button")
          (:file "form")
          (:file "group")
          (:file "label")

@@ -15,6 +15,8 @@
     #:editable-combobox
     #:enabled
     #:entry
+    #:font
+    #:font-button
     #:form
     #:group
     #:horizontal-box
