@@ -20,6 +20,7 @@
     #:font
     #:font-button
     #:form
+    #:grid
     #:group
     #:horizontal-box
     #:horizontal-separator
@@ -29,9 +30,11 @@
     #:multiline-entry
     #:non-wrapping-multiline-entry
     #:on-changed
+    #:on-clicked
     #:on-closing
     #:on-init
     #:on-should-quit
+    #:open-file
     #:padded
     #:password-entry
     #:progress-bar

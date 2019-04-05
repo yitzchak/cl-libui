@@ -23,6 +23,7 @@
          (:file "entry")
          (:file "font-button")
          (:file "form")
+         (:file "grid")
          (:file "group")
          (:file "label")
          (:file "list")

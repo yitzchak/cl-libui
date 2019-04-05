@@ -45,4 +45,4 @@
         (%new-horizontal-box)))
 
 (defmethod append-child ((object box) child &rest options &key &allow-other-keys)
-  (%box-append (handle object) (handle child) (getf options :stretch)))
+  (%box-append object child (getf options :stretch)))

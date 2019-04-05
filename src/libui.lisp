@@ -198,7 +198,7 @@
 
 (cffi:defcfun ("uiBoxAppend" %box-append) :void
   (b control-type)
-  (child :pointer)
+  (child control-type)
   (stretchy (:boolean :int)))
 
 (cffi:defcfun ("uiBoxDelete" %box-delete) :void
@@ -520,10 +520,10 @@
 (cffi:defcfun ("uiNewMenu" %new-menu) :pointer
   (name :string))
 
-(cffi:defcfun ("uiOpenFile" %open-file) :string
+(cffi:defcfun ("uiOpenFile" open-file) :string
   (parent control-type))
 
-(cffi:defcfun ("uiSaveFile" %save-file) :string
+(cffi:defcfun ("uiSaveFile" save-file) :string
   (parent control-type))
 
 (cffi:defcfun ("uiMsgBox" %msg-box) :void
@@ -1169,35 +1169,35 @@
 	:at-bottom)
 
 (cffi:defcfun ("uiGridAppend" %grid-append) :void
-  (g :pointer)
-  (c :pointer)
+  (g control-type)
+  (c control-type)
   (left :int)
   (top :int)
   (xspan :int)
   (yspan :int)
-  (hexpand :int)
-  (halign :unsigned-int)
-  (vexpand :int)
-  (valign :unsigned-int))
+  (hexpand (:boolean :int))
+  (halign %align)
+  (vexpand (:boolean :int))
+  (valign %align))
 
 (cffi:defcfun ("uiGridInsertAt" %grid-insert-at) :void
-  (g :pointer)
-  (c :pointer)
-  (existing :pointer)
-  (at :unsigned-int)
+  (g control-type)
+  (c control-type)
+  (existing control-type)
+  (at %at)
   (xspan :int)
   (yspan :int)
-  (hexpand :int)
-  (halign :unsigned-int)
-  (vexpand :int)
-  (valign :unsigned-int))
+  (hexpand (:boolean :int))
+  (halign %align)
+  (vexpand (:boolean :int))
+  (valign %align))
 
-(cffi:defcfun ("uiGridPadded" %grid-padded) :int
-  (g :pointer))
+(cffi:defcfun ("uiGridPadded" %grid-padded) (:boolean :int)
+  (g control-type))
 
 (cffi:defcfun ("uiGridSetPadded" %grid-set-padded) :void
-  (g :pointer)
-  (padded :int))
+  (g control-type)
+  (padded (:boolean :int)))
 
 (cffi:defcfun ("uiNewGrid" %new-grid) :pointer)
 

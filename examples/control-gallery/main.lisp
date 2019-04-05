@@ -1,8 +1,11 @@
 (ql:quickload :cl-libui)
 
+(defparameter *window* nil)
 (defparameter *slider* nil)
 (defparameter *spinbox* nil)
 (defparameter *progress-bar* nil)
+(defparameter *file-entry* nil)
+(defparameter *file-button* nil)
 
 (defmethod ui:on-changed (control)
   (cond
@@ -18,6 +21,10 @@
       (format t "~S~%" (ui:font control)))
     ((typep control 'ui:color-button)
       (format t "~S~%" (ui:color control)))))
+
+(defmethod ui:on-clicked (control)
+  (when (eql control *file-button*)
+    (setf (ui:text *file-entry*) (or (ui:open-file control) "(cancelled)"))))
 
 (defun make-basic-controls-page ()
   (let ((vbox (make-instance 'ui:vertical-box :padded t))
@@ -73,21 +80,30 @@
     hbox))
 
 (defun make-data-choosers-page ()
-  (let ((hbox (make-instance 'ui:horizontal-box :padded t))
-        (vbox (make-instance 'ui:vertical-box :padded t)))
-    (ui:append-child hbox vbox)
-    (ui:append-child vbox (make-instance 'ui:date-time-picker))
-    (ui:append-child vbox (make-instance 'ui:date-picker))
-    (ui:append-child vbox (make-instance 'ui:time-picker))
-    (ui:append-child vbox (make-instance 'ui:font-button))
-    (ui:append-child vbox (make-instance 'ui:color-button))
+  (let ((hbox (make-instance 'ui:horizontal-box :padded t)))
+    (let ((vbox (make-instance 'ui:vertical-box :padded t)))
+      (ui:append-child hbox vbox)
+      (ui:append-child vbox (make-instance 'ui:date-time-picker))
+      (ui:append-child vbox (make-instance 'ui:date-picker))
+      (ui:append-child vbox (make-instance 'ui:time-picker))
+      (ui:append-child vbox (make-instance 'ui:font-button))
+      (ui:append-child vbox (make-instance 'ui:color-button)))
+    (ui:append-child hbox (make-instance 'ui:vertical-separator))
+    (let ((vbox (make-instance 'ui:vertical-box :padded t))
+          (g (make-instance 'ui:grid :padded t)))
+      (ui:append-child hbox vbox)
+      (ui:append-child vbox g)
+      (setq *file-button* (make-instance 'ui:button :text "Open File"))
+      (ui:append-child g *file-button* :left 0 :top 0 :xspan 1 :yspan 1 :halign :align-fill :valign :align-fill)
+      (setq *file-entry* (make-instance 'ui:entry :read-only t))
+      (ui:append-child g *file-entry* :left 1 :top 0 :xspan 1 :yspan 1 :hexpand t :halign :align-fill :valign :align-fill))
     hbox))
 
 (defmethod ui:on-init ()
   (let ((tab (make-instance 'ui:tab)))
-    (defvar w (make-instance 'ui:window :title "libui Control Gallery" :width 640 :height 480
+    (setq *window* (make-instance 'ui:window :title "libui Control Gallery" :width 640 :height 480
                                         :has-menubar t :visible t))
-    (setf (ui:child w) tab)
+    (setf (ui:child *window*) tab)
     (ui:append-child tab (make-basic-controls-page) :title "Basic Controls")
     (ui:append-child tab (make-numbers-page) :title "Numbers and Lists")
     (ui:append-child tab (make-data-choosers-page) :title "Data Choosers")))
