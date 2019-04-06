@@ -14,7 +14,7 @@
      :accessor title
      :initarg :title
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance group) &rest initargs &key &allow-other-keys)
   (setf (handle instance)
@@ -24,7 +24,7 @@
   (when new-value
     (%group-set-child object new-value)))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object group) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object group) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('margined
@@ -35,7 +35,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object group) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object group) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('margined

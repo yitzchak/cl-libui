@@ -6,22 +6,22 @@
      :initarg :padded
      :initform nil
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object form) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object form) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('padded
-        (%form-padded (handle object)))
+        (%form-padded object))
       (t
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object form) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object form) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('padded
-        (%form-set-padded (handle object) new-value))
+        (%form-set-padded object new-value))
       (t
         (call-next-method)))
     (call-next-method)))
@@ -32,4 +32,4 @@
         (%new-form)))
 
 (defmethod append-child ((object form) child &rest options &key &allow-other-keys)
-  (%form-append (handle object) (getf options :label) (handle child) (getf options :stretch)))
+  (%form-append object (getf options :label) child (getf options :stretch)))

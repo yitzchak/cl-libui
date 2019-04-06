@@ -6,13 +6,13 @@
      :initarg :value
      :initform 0
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defclass spinbox (range-control)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object spinbox) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object spinbox) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('value
@@ -21,7 +21,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object spinbox) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object spinbox) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('value
@@ -37,9 +37,9 @@
 
 (defclass slider (range-control)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object slider) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object slider) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('value
@@ -48,7 +48,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object slider) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object slider) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('value
@@ -64,9 +64,9 @@
 
 (defclass progress-bar (range-control)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object progress-bar) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object progress-bar) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('value
@@ -75,7 +75,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object progress-bar) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object progress-bar) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('value

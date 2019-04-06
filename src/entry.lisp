@@ -11,13 +11,13 @@
      :initarg :read-only
      :initform nil
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defclass entry (base-entry)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object base-entry) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object base-entry) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('read-only
@@ -28,7 +28,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object base-entry) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object base-entry) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('read-only
@@ -47,7 +47,7 @@
 
 (defclass password-entry (base-entry)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance password-entry) &rest initargs &key &allow-other-keys)
 (declare (ignore initargs))
@@ -57,7 +57,7 @@
 
 (defclass search-entry (base-entry)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance search-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
@@ -67,11 +67,11 @@
 
 (defclass multiline-base-entry (base-entry)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defclass multiline-entry (multiline-base-entry)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance multiline-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
@@ -79,7 +79,7 @@
         (%new-multiline-entry))
   (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object multiline-base-entry) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object multiline-base-entry) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('read-only
@@ -90,7 +90,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object multiline-base-entry) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object multiline-base-entry) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('read-only
@@ -103,7 +103,7 @@
 
 (defclass non-wrapping-multiline-entry (multiline-base-entry)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance non-wrapping-multiline-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))

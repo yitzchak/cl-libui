@@ -7,16 +7,23 @@
 
 (cffi:use-foreign-library libui)
 
-(cffi:define-foreign-type control-type ()
+(cffi:define-foreign-type ui-type ()
   ()
   (:actual-type :pointer))
 
-(cffi:define-parse-method control-type ()
-  (make-instance 'control-type))
+(cffi:define-parse-method ui-type ()
+  (make-instance 'ui-type))
+
+(cffi:define-foreign-type draw-context-type ()
+  ()
+  (:actual-type :pointer))
+
+(cffi:define-parse-method draw-context-type ()
+  (make-instance 'draw-context-type))
 
 (cffi:defcenum (%for-each :unsigned-int)
-	:for-each-continue
-	:for-each-stop)
+	:continue
+	:stop)
 
 (cffi:defcstruct %init-options
 	(size :ulong))
@@ -71,38 +78,38 @@
 ; 	(Disable :pointer))
 
 (cffi:defcfun ("uiControlDestroy" %control-destroy) :void
-  (arg0 control-type))
+  (arg0 ui-type))
 
 ; (cffi:defcfun ("uiControlHandle" %control-handle) :pointer
 ;   (arg0 :pointer))
 
 (cffi:defcfun ("uiControlParent" %control-parent) :pointer
-  (arg0 control-type))
+  (arg0 ui-type))
 
 (cffi:defcfun ("uiControlSetParent" %control-set-parent) :void
-  (arg0 control-type)
-  (arg1 control-type))
+  (arg0 ui-type)
+  (arg1 ui-type))
 
 (cffi:defcfun ("uiControlToplevel" %control-toplevel) (:boolean :int)
-  (arg0 control-type))
+  (arg0 ui-type))
 
 (cffi:defcfun ("uiControlVisible" %control-visible) (:boolean :int)
-  (arg0 control-type))
+  (arg0 ui-type))
 
 (cffi:defcfun ("uiControlShow" %control-show) :void
-  (arg0 control-type))
+  (arg0 ui-type))
 
 (cffi:defcfun ("uiControlHide" %control-hide) :void
-  (arg0 control-type))
+  (arg0 ui-type))
 
 (cffi:defcfun ("uiControlEnabled" %control-enabled) (:boolean :int)
-  (arg0 control-type))
+  (arg0 ui-type))
 
 (cffi:defcfun ("uiControlEnable" %control-enable) :void
-  (arg0 control-type))
+  (arg0 ui-type))
 
 (cffi:defcfun ("uiControlDisable" %control-disable) :void
-  (arg0 control-type))
+  (arg0 ui-type))
 
 ; (cffi:defcfun ("uiAllocControl" %alloc-control) :pointer
 ;   (n :pointer)
@@ -111,7 +118,7 @@
 ;   (typenamestr :string))
 ;
 ; (cffi:defcfun ("uiFreeControl" %free-control) :void
-;   (arg0 control-type))
+;   (arg0 ui-type))
 
 ; (cffi:defcfun ("uiControlVerifySetParent" %control-verify-set-parent) :void
 ;   (arg0 :pointer)
@@ -124,55 +131,55 @@
 ;   (type :string))
 
 (cffi:defcfun ("uiWindowTitle" %window-title) :string
-  (w control-type))
+  (w ui-type))
 
 (cffi:defcfun ("uiWindowSetTitle" %window-set-title) :void
-  (w control-type)
+  (w ui-type)
   (title :string))
 
 (cffi:defcfun ("uiWindowContentSize" %window-content-size) :void
-  (w control-type)
+  (w ui-type)
   (width (:pointer :int))
   (height (:pointer :int)))
 
 (cffi:defcfun ("uiWindowSetContentSize" %window-set-content-size) :void
-  (w control-type)
+  (w ui-type)
   (width :int)
   (height :int))
 
 (cffi:defcfun ("uiWindowFullscreen" %window-fullscreen) (:boolean :int)
-  (w control-type))
+  (w ui-type))
 
 (cffi:defcfun ("uiWindowSetFullscreen" %window-set-fullscreen) :void
-  (w control-type)
+  (w ui-type)
   (fullscreen (:boolean :int)))
 
 (cffi:defcfun ("uiWindowOnContentSizeChanged" %window-on-content-size-changed) :void
-  (w control-type)
+  (w ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiWindowOnClosing" %window-on-closing) :void
-  (w control-type)
+  (w ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiWindowBorderless" %window-borderless) (:boolean :int)
-  (w control-type))
+  (w ui-type))
 
 (cffi:defcfun ("uiWindowSetBorderless" %window-set-borderless) :void
-  (w control-type)
+  (w ui-type)
   (borderless (:boolean :int)))
 
 (cffi:defcfun ("uiWindowSetChild" %window-set-child) :void
-  (w control-type)
-  (child control-type))
+  (w ui-type)
+  (child ui-type))
 
 (cffi:defcfun ("uiWindowMargined" %window-margined) (:boolean :int)
-  (w control-type))
+  (w ui-type))
 
 (cffi:defcfun ("uiWindowSetMargined" %window-set-margined) :void
-  (w control-type)
+  (w ui-type)
   (margined (:boolean :int)))
 
 (cffi:defcfun ("uiNewWindow" %new-window) :pointer
@@ -182,14 +189,14 @@
   (hasMenubar (:boolean :int)))
 
 (cffi:defcfun ("uiButtonText" %button-text) :string
-  (b control-type))
+  (b ui-type))
 
 (cffi:defcfun ("uiButtonSetText" %button-set-text) :void
-  (b control-type)
+  (b ui-type)
   (text :string))
 
 (cffi:defcfun ("uiButtonOnClicked" %button-on-clicked) :void
-  (b control-type)
+  (b ui-type)
   (f :pointer)
   (data :pointer))
 
@@ -197,19 +204,19 @@
   (text :string))
 
 (cffi:defcfun ("uiBoxAppend" %box-append) :void
-  (b control-type)
-  (child control-type)
+  (b ui-type)
+  (child ui-type)
   (stretchy (:boolean :int)))
 
 (cffi:defcfun ("uiBoxDelete" %box-delete) :void
-  (b control-type)
+  (b ui-type)
   (index :int))
 
 (cffi:defcfun ("uiBoxPadded" %box-padded) (:boolean :int)
-  (b control-type))
+  (b ui-type))
 
 (cffi:defcfun ("uiBoxSetPadded" %box-set-padded) :void
-  (b control-type)
+  (b ui-type)
   (padded (:boolean :int)))
 
 (cffi:defcfun ("uiNewHorizontalBox" %new-horizontal-box) :pointer)
@@ -217,44 +224,44 @@
 (cffi:defcfun ("uiNewVerticalBox" %new-vertical-box) :pointer)
 
 (cffi:defcfun ("uiCheckboxText" %checkbox-text) :string
-  (c control-type))
+  (c ui-type))
 
 (cffi:defcfun ("uiCheckboxSetText" %checkbox-set-text) :void
-  (c control-type)
+  (c ui-type)
   (text :string))
 
 (cffi:defcfun ("uiCheckboxOnToggled" %checkbox-on-toggled) :void
-  (c control-type)
+  (c ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiCheckboxChecked" %checkbox-checked) (:boolean :int)
-  (c control-type))
+  (c ui-type))
 
 (cffi:defcfun ("uiCheckboxSetChecked" %checkbox-set-checked) :void
-  (c control-type)
+  (c ui-type)
   (checked (:boolean :int)))
 
 (cffi:defcfun ("uiNewCheckbox" %new-checkbox) :pointer
   (text :string))
 
 (cffi:defcfun ("uiEntryText" %entry-text) :string
-  (e control-type))
+  (e ui-type))
 
 (cffi:defcfun ("uiEntrySetText" %entry-set-text) :void
-  (e control-type)
+  (e ui-type)
   (text :string))
 
 (cffi:defcfun ("uiEntryOnChanged" %entry-on-changed) :void
-  (e control-type)
+  (e ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiEntryReadOnly" %entry-read-only) (:boolean :int)
-  (e control-type))
+  (e ui-type))
 
 (cffi:defcfun ("uiEntrySetReadOnly" %entry-set-read-only) :void
-  (e control-type)
+  (e ui-type)
   (readonly (:boolean :int)))
 
 (cffi:defcfun ("uiNewEntry" %new-entry) :pointer)
@@ -264,74 +271,74 @@
 (cffi:defcfun ("uiNewSearchEntry" %new-search-entry) :pointer)
 
 (cffi:defcfun ("uiLabelText" %label-text) :string
-  (l control-type))
+  (l ui-type))
 
 (cffi:defcfun ("uiLabelSetText" %label-set-text) :void
-  (l control-type)
+  (l ui-type)
   (text :string))
 
 (cffi:defcfun ("uiNewLabel" %new-label) :pointer
   (text :string))
 
 (cffi:defcfun ("uiTabAppend" %tab-append) :void
-  (t_arg0 control-type)
+  (t_arg0 ui-type)
   (name :string)
-  (c control-type))
+  (c ui-type))
 
 (cffi:defcfun ("uiTabInsertAt" %tab-insert-at) :void
-  (t_arg0 control-type)
+  (t_arg0 ui-type)
   (name :string)
   (before :int)
-  (c control-type))
+  (c ui-type))
 
 (cffi:defcfun ("uiTabDelete" %tab-delete) :void
-  (t_arg0 control-type)
+  (t_arg0 ui-type)
   (index :int))
 
 (cffi:defcfun ("uiTabNumPages" %tab-num-pages) :int
-  (t_arg0 control-type))
+  (t_arg0 ui-type))
 
 (cffi:defcfun ("uiTabMargined" %tab-margined) (:boolean :int)
-  (t_arg0 control-type)
+  (t_arg0 ui-type)
   (page :int))
 
 (cffi:defcfun ("uiTabSetMargined" %tab-set-margined) :void
-  (t_arg0 control-type)
+  (t_arg0 ui-type)
   (page :int)
   (margined (:boolean :int)))
 
 (cffi:defcfun ("uiNewTab" %new-tab) :pointer)
 
 (cffi:defcfun ("uiGroupTitle" %group-title) :string
-  (g control-type))
+  (g ui-type))
 
 (cffi:defcfun ("uiGroupSetTitle" %group-set-title) :void
-  (g control-type)
+  (g ui-type)
   (title :string))
 
 (cffi:defcfun ("uiGroupSetChild" %group-set-child) :void
-  (g control-type)
-  (c control-type))
+  (g ui-type)
+  (c ui-type))
 
 (cffi:defcfun ("uiGroupMargined" %group-margined) (:boolean :int)
-  (g control-type))
+  (g ui-type))
 
 (cffi:defcfun ("uiGroupSetMargined" %group-set-margined) :void
-  (g control-type)
+  (g ui-type)
   (margined (:boolean :int)))
 
 (cffi:defcfun ("uiNewGroup" %new-group) :pointer
   (title :string))
 
 (cffi:defcfun ("uiSpinboxValue" %spinbox-value) :int
-  (s control-type))
+  (s ui-type))
 
 (cffi:defcfun ("uiSpinboxSetValue" %spinbox-set-value) :void
-  (s control-type)
+  (s ui-type)
   (value :int))
 
 (cffi:defcfun ("uiSpinboxOnChanged" %spinbox-on-changed) :void
-  (s control-type)
+  (s ui-type)
   (f :pointer)
   (data :pointer))
 
@@ -340,14 +347,14 @@
   (max :int))
 
 (cffi:defcfun ("uiSliderValue" %slider-value) :int
-  (s control-type))
+  (s ui-type))
 
 (cffi:defcfun ("uiSliderSetValue" %slider-set-value) :void
-  (s control-type)
+  (s ui-type)
   (value :int))
 
 (cffi:defcfun ("uiSliderOnChanged" %slider-on-changed) :void
-  (s control-type)
+  (s ui-type)
   (f :pointer)
   (data :pointer))
 
@@ -356,10 +363,10 @@
   (max :int))
 
 (cffi:defcfun ("uiProgressBarValue" %progress-bar-value) :int
-  (p control-type))
+  (p ui-type))
 
 (cffi:defcfun ("uiProgressBarSetValue" %progress-bar-set-value) :void
-  (p control-type)
+  (p ui-type)
   (n :int))
 
 (cffi:defcfun ("uiNewProgressBar" %new-progress-bar) :pointer)
@@ -369,54 +376,54 @@
 (cffi:defcfun ("uiNewVerticalSeparator" %new-vertical-separator) :pointer)
 
 (cffi:defcfun ("uiComboboxAppend" %combobox-append) :void
-  (c control-type)
+  (c ui-type)
   (text :string))
 
 (cffi:defcfun ("uiComboboxSelected" %combobox-selected) :int
-  (c control-type))
+  (c ui-type))
 
 (cffi:defcfun ("uiComboboxSetSelected" %combobox-set-selected) :void
-  (c control-type)
+  (c ui-type)
   (n :int))
 
 (cffi:defcfun ("uiComboboxOnSelected" %combobox-on-selected) :void
-  (c control-type)
+  (c ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiNewCombobox" %new-combobox) :pointer)
 
 (cffi:defcfun ("uiEditableComboboxAppend" %editable-combobox-append) :void
-  (c control-type)
+  (c ui-type)
   (text :string))
 
 (cffi:defcfun ("uiEditableComboboxText" %editable-combobox-text) :string
-  (c control-type))
+  (c ui-type))
 
 (cffi:defcfun ("uiEditableComboboxSetText" %editable-combobox-set-text) :void
-  (c control-type)
+  (c ui-type)
   (text :string))
 
 (cffi:defcfun ("uiEditableComboboxOnChanged" %editable-combobox-on-changed) :void
-  (c control-type)
+  (c ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiNewEditableCombobox" %new-editable-combobox) :pointer)
 
 (cffi:defcfun ("uiRadioButtonsAppend" %radio-buttons-append) :void
-  (r control-type)
+  (r ui-type)
   (text :string))
 
 (cffi:defcfun ("uiRadioButtonsSelected" %radio-buttons-selected) :int
-  (r control-type))
+  (r ui-type))
 
 (cffi:defcfun ("uiRadioButtonsSetSelected" %radio-buttons-set-selected) :void
-  (r control-type)
+  (r ui-type)
   (n :int))
 
 (cffi:defcfun ("uiRadioButtonsOnSelected" %radio-buttons-on-selected) :void
-  (r control-type)
+  (r ui-type)
   (f :pointer)
   (data :pointer))
 
@@ -434,15 +441,15 @@
   (isdst :int))
 
 (cffi:defcfun ("uiDateTimePickerTime" %date-time-picker-time) :void
-  (d control-type)
+  (d ui-type)
   (time (:pointer (:struct %tm))))
 
 (cffi:defcfun ("uiDateTimePickerSetTime" %date-time-picker-set-time) :void
-  (d control-type)
+  (d ui-type)
   (time (:pointer (:struct %tm))))
 
 (cffi:defcfun ("uiDateTimePickerOnChanged" %date-time-picker-on-changed) :void
-  (d control-type)
+  (d ui-type)
   (f :pointer)
   (data :pointer))
 
@@ -453,26 +460,26 @@
 (cffi:defcfun ("uiNewTimePicker" %new-time-picker) :pointer)
 
 (cffi:defcfun ("uiMultilineEntryText" %multiline-entry-text) :string
-  (e control-type))
+  (e ui-type))
 
 (cffi:defcfun ("uiMultilineEntrySetText" %multiline-entry-set-text) :void
-  (e control-type)
+  (e ui-type)
   (text :string))
 
 (cffi:defcfun ("uiMultilineEntryAppend" %multiline-entry-append) :void
-  (e control-type)
+  (e ui-type)
   (text :string))
 
 (cffi:defcfun ("uiMultilineEntryOnChanged" %multiline-entry-on-changed) :void
-  (e control-type)
+  (e ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiMultilineEntryReadOnly" %multiline-entry-read-only) (:boolean :int)
-  (e control-type))
+  (e ui-type))
 
 (cffi:defcfun ("uiMultilineEntrySetReadOnly" %multiline-entry-set-read-only) :void
-  (e control-type)
+  (e ui-type)
   (readonly (:boolean :int)))
 
 (cffi:defcfun ("uiNewMultilineEntry" %new-multiline-entry) :pointer)
@@ -480,59 +487,59 @@
 (cffi:defcfun ("uiNewNonWrappingMultilineEntry" %new-non-wrapping-multiline-entry) :pointer)
 
 (cffi:defcfun ("uiMenuItemEnable" %menu-item-enable) :void
-  (m control-type))
+  (m ui-type))
 
 (cffi:defcfun ("uiMenuItemDisable" %menu-item-disable) :void
-  (m control-type))
+  (m ui-type))
 
 (cffi:defcfun ("uiMenuItemOnClicked" %menu-item-on-clicked) :void
-  (m control-type)
+  (m ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiMenuItemChecked" %menu-item-checked) (:boolean :int)
-  (m control-type))
+  (m ui-type))
 
 (cffi:defcfun ("uiMenuItemSetChecked" %menu-item-set-checked) :void
-  (m control-type)
+  (m ui-type)
   (checked (:boolean :int)))
 
 (cffi:defcfun ("uiMenuAppendItem" %menu-append-item) :pointer
-  (m control-type)
+  (m ui-type)
   (name :string))
 
 (cffi:defcfun ("uiMenuAppendCheckItem" %menu-append-check-item) :pointer
-  (m control-type)
+  (m ui-type)
   (name :string))
 
 (cffi:defcfun ("uiMenuAppendQuitItem" %menu-append-quit-item) :pointer
-  (m control-type))
+  (m ui-type))
 
 (cffi:defcfun ("uiMenuAppendPreferencesItem" %menu-append-preferences-item) :pointer
-  (m control-type))
+  (m ui-type))
 
 (cffi:defcfun ("uiMenuAppendAboutItem" %menu-append-about-item) :pointer
-  (m control-type))
+  (m ui-type))
 
 (cffi:defcfun ("uiMenuAppendSeparator" %menu-append-separator) :void
-  (m control-type))
+  (m ui-type))
 
 (cffi:defcfun ("uiNewMenu" %new-menu) :pointer
   (name :string))
 
 (cffi:defcfun ("uiOpenFile" open-file) :string
-  (parent control-type))
+  (parent ui-type))
 
 (cffi:defcfun ("uiSaveFile" save-file) :string
-  (parent control-type))
+  (parent ui-type))
 
 (cffi:defcfun ("uiMsgBox" message-box) :void
-  (parent control-type)
+  (parent ui-type)
   (title :string)
   (description :string))
 
 (cffi:defcfun ("uiMsgBoxError" error-box) :void
-  (parent control-type)
+  (parent ui-type)
   (title :string)
   (description :string))
 
@@ -544,35 +551,35 @@
 	(:key-event :pointer))
 
 (cffi:defcenum (%window-resize-edge :unsigned-int)
-	:window-resize-edge-left
-	:window-resize-edge-top
-	:window-resize-edge-right
-	:window-resize-edge-bottom
-	:window-resize-edge-top-left
-	:window-resize-edge-top-right
-	:window-resize-edge-bottom-left
-	:window-resize-edge-bottom-right)
+	:left
+	:top
+	:right
+	:bottom
+	:top-left
+	:top-right
+	:bottom-left
+	:bottom-right)
 
 (cffi:defcfun ("uiAreaSetSize" %area-set-size) :void
-  (a control-type)
+  (a ui-type)
   (width :int)
   (height :int))
 
 (cffi:defcfun ("uiAreaQueueRedrawAll" %area-queue-redraw-all) :void
-  (a control-type))
+  (a ui-type))
 
 (cffi:defcfun ("uiAreaScrollTo" %area-scroll-to) :void
-  (a control-type)
+  (a ui-type)
   (x :double)
   (y :double)
   (width :double)
   (height :double))
 
 (cffi:defcfun ("uiAreaBeginUserWindowMove" %area-begin-user-window-move) :void
-  (a control-type))
+  (a ui-type))
 
 (cffi:defcfun ("uiAreaBeginUserWindowResize" %area-begin-user-window-resize) :void
-  (a control-type)
+  (a ui-type)
   (edge :unsigned-int))
 
 (cffi:defcfun ("uiNewArea" %new-area) :pointer
@@ -584,43 +591,43 @@
   (height :int))
 
 (cffi:defcstruct %area-draw-params
-	(context :pointer)
-	(area-width :double)
-	(area-height :double)
-	(clip-x :double)
-	(clip-y :double)
-	(clip-width :double)
-	(clip-height :double))
+	(:context draw-context-type)
+	(:area-width :double)
+	(:area-height :double)
+	(:clip-x :double)
+	(:clip-y :double)
+	(:clip-width :double)
+	(:clip-height :double))
 
 (cffi:defcenum (%draw-brush-type :unsigned-int)
-	:draw-brush-type-solid
-	:draw-brush-type-linear-gradient
-	:draw-brush-type-radial-gradient
-	:draw-brush-type-image)
+	:solid
+	:linear-gradient
+	:radial-gradient
+	:image)
 
 (cffi:defcenum (%draw-line-cap :unsigned-int)
-	:draw-line-cap-flat
-	:draw-line-cap-round
-	:draw-line-cap-square)
+	:flat
+	:round
+	:square)
 
 (cffi:defcenum (%draw-line-join :unsigned-int)
-	:draw-line-join-miter
-	:draw-line-join-round
-	:draw-line-join-bevel)
+	:miter
+	:round
+	:bevel)
 
 (cl:defconstant %draw-default-miter-limit 10.0d0)
 
 (cffi:defcenum (%draw-file-mode :unsigned-int)
-	:draw-fill-mode-winding
-	:draw-fill-mode-alternate)
+	:winding
+	:alternate)
 
 (cffi:defcstruct %draw-matrix
-	(m11 :double)
-	(m12 :double)
-	(m21 :double)
-	(m22 :double)
-	(m31 :double)
-	(m32 :double))
+	(:m11 :double)
+	(:m12 :double)
+	(:m21 :double)
+	(:m22 :double)
+	(:m31 :double)
+	(:m32 :double))
 
 (cffi:defcstruct %draw-brush
 	(type %draw-brush-type)
@@ -785,16 +792,16 @@
   (a :pointer))
 
 (cffi:defcenum (%attribute-type :unsigned-int)
-	:attribute-type-family
-	:attribute-type-size
-	:attribute-type-weight
-	:attribute-type-italic
-	:attribute-type-stretch
-	:attribute-type-color
-	:attribute-type-background
-	:attribute-type-underline
-	:attribute-type-underline-color
-	:attribute-type-features)
+	:family
+	:size
+	:weight
+	:italic
+	:stretch
+	:color
+	:background
+	:underline
+	:underline-color
+	:features)
 
 (cffi:defcfun ("uiAttributeGetType" %attribute-get-type) :unsigned-int
   (a :pointer))
@@ -812,19 +819,19 @@
   (a :pointer))
 
 (cffi:defcenum (%text-weight :unsigned-int)
-	(:text-weight-minimum 0)
-	(:text-weight-thin 100)
-	(:text-weight-ultra-light 200)
-	(:text-weight-light 300)
-	(:text-weight-book 350)
-	(:text-weight-normal 400)
-	(:text-weight-medium 500)
-	(:text-weight-semi-bold 600)
-	(:text-weight-bold 700)
-	(:text-weight-ultra-bold 800)
-	(:text-weight-heavy 900)
-	(:text-weight-ultra-heavy 950)
-	(:text-weight-maximum 1000))
+	(:minimum 0)
+	(:thin 100)
+	(:ultra-light 200)
+	(:light 300)
+	(:book 350)
+	(:normal 400)
+	(:medium 500)
+	(:semi-bold 600)
+	(:bold 700)
+	(:ultra-bold 800)
+	(:heavy 900)
+	(:ultra-heavy 950)
+	(:maximum 1000))
 
 (cffi:defcfun ("uiNewWeightAttribute" %new-weight-attribute) :pointer
   (weight %text-weight))
@@ -833,9 +840,9 @@
   (a :pointer))
 
 (cffi:defcenum (%text-italic :unsigned-int)
-	:text-italic-normal
-	:text-italic-oblique
-	:text-italic-italic)
+	:normal
+	:oblique
+	:italic)
 
 (cffi:defcfun ("uiNewItalicAttribute" %new-italic-attribute) :pointer
   (italic %text-italic))
@@ -844,15 +851,15 @@
   (a :pointer))
 
 (cffi:defcenum (%text-stretch :unsigned-int)
-	:text-stretch-ultra-condensed
-	:text-stretch-extra-condensed
-	:text-stretch-condensed
-	:text-stretch-semi-condensed
-	:text-stretch-normal
-	:text-stretch-semi-expanded
-	:text-stretch-expanded
-	:text-stretch-extra-expanded
-	:text-stretch-ultra-expanded)
+	:ultra-condensed
+	:extra-condensed
+	:condensed
+	:semi-condensed
+	:normal
+	:semi-expanded
+	:expanded
+	:extra-expanded
+	:ultra-expanded)
 
 (cffi:defcfun ("uiNewStretchAttribute" %new-stretch-attribute) :pointer
   (stretch %text-stretch))
@@ -880,22 +887,22 @@
   (a :double))
 
 (cffi:defcenum (%underline :unsigned-int)
-	:underline-none
-	:underline-single
-	:underline-double
-	:underline-suggestion)
+	:none
+	:single
+	:double
+	:suggestion)
 
 (cffi:defcfun ("uiNewUnderlineAttribute" %new-underline-attribute) :pointer
-  (u :unsigned-int))
+  (u %underline))
 
 (cffi:defcfun ("uiAttributeUnderline" %attribute-underline) :unsigned-int
   (a :pointer))
 
 (cffi:defcenum (%underline-color :unsigned-int)
-	:underline-color-custom
-	:underline-color-spelling
-	:underline-color-grammar
-	:underline-color-auxiliary)
+	:custom
+	:spelling
+	:grammar
+	:auxiliary)
 
 (cffi:defcfun ("uiNewUnderlineColorAttribute" %new-underline-color-attribute) :pointer
   (u %underline-color)
@@ -926,7 +933,7 @@
   (b :char)
   (c :char)
   (d :char)
-  (value :pointer))
+  (value :uint32))
 
 (cffi:defcfun ("uiOpenTypeFeaturesRemove" %open-type-features-remove) :void
   (otf :pointer)
@@ -935,13 +942,13 @@
   (c :char)
   (d :char))
 
-(cffi:defcfun ("uiOpenTypeFeaturesGet" %open-type-features-get) :int
+(cffi:defcfun ("uiOpenTypeFeaturesGet" %open-type-features-get) (:boolean :int)
   (otf :pointer)
   (a :char)
   (b :char)
   (c :char)
   (d :char)
-  (value :pointer))
+  (value (:pointer :uint32)))
 
 (cffi:defcfun ("uiOpenTypeFeaturesForEach" %open-type-features-for-each) :void
   (otf :pointer)
@@ -961,45 +968,45 @@
   (s :pointer))
 
 (cffi:defcfun ("uiAttributedStringString" %attributed-string-string) :string
-  (s :pointer))
+  (s ui-type))
 
-(cffi:defcfun ("uiAttributedStringLen" %attributed-string-len) :pointer
-  (s :pointer))
+(cffi:defcfun ("uiAttributedStringLen" %attributed-string-len) :uint
+  (s ui-type))
 
 (cffi:defcfun ("uiAttributedStringAppendUnattributed" %attributed-string-append-unattributed) :void
-  (s :pointer)
+  (s ui-type)
   (str :string))
 
-(cffi:defcfun ("uiAttributedStringInsertAtUnattributed" %attributed-string-insert-at-unattributed) :void
-  (s :pointer)
+(cffi:defcfun ("uiAttributedStringInsertAtUnattributed" %attributed-string-insert-unattributed) :void
+  (s ui-type)
   (str :string)
-  (at :pointer))
+  (at :uint))
 
 (cffi:defcfun ("uiAttributedStringDelete" %attributed-string-delete) :void
-  (s :pointer)
-  (start :pointer)
-  (end :pointer))
+  (s ui-type)
+  (start :uint)
+  (end :uint))
 
 (cffi:defcfun ("uiAttributedStringSetAttribute" %attributed-string-set-attribute) :void
-  (s :pointer)
+  (s ui-type)
   (a :pointer)
-  (start :pointer)
-  (end :pointer))
+  (start :uint)
+  (end :uint))
 
 (cffi:defcfun ("uiAttributedStringForEachAttribute" %attributed-string-for-each-attribute) :void
-  (s :pointer)
+  (s ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiAttributedStringNumGraphemes" %attributed-string-num-graphemes) :pointer
-  (s :pointer))
+  (s ui-type))
 
 (cffi:defcfun ("uiAttributedStringByteIndexToGrapheme" %attributed-string-byte-index-to-grapheme) :pointer
-  (s :pointer)
+  (s ui-type)
   (pos :pointer))
 
 (cffi:defcfun ("uiAttributedStringGraphemeToByteIndex" %attributed-string-grapheme-to-byte-index) :pointer
-  (s :pointer)
+  (s ui-type)
   (pos :pointer))
 
 (cffi:defcstruct %font-descriptor
@@ -1010,39 +1017,39 @@
 	(:stretch %text-stretch))
 
 (cffi:defcenum (%draw-text-align :unsigned-int)
-	%draw-text-align-left
-	%draw-text-align-center
-	%draw-text-align-right)
+	:left
+	:center
+	:right)
 
 (cffi:defcstruct %draw-text-layout-params
-	(string :pointer)
-	(defaultFont :pointer)
+	(string ui-type)
+	(default-font (:pointer (:struct %font-descriptor)))
 	(width :double)
 	(align %draw-text-align))
 
 (cffi:defcfun ("uiDrawNewTextLayout" %draw-new-text-layout) :pointer
-  (params :pointer))
+  (params (:pointer (:struct %draw-text-layout-params))))
 
 (cffi:defcfun ("uiDrawFreeTextLayout" %draw-free-text-layout) :void
   (tl :pointer))
 
 (cffi:defcfun ("uiDrawText" %draw-text) :void
-  (c :pointer)
-  (tl :pointer)
+  (c draw-context-type)
+  (tl ui-type)
   (x :double)
   (y :double))
 
 (cffi:defcfun ("uiDrawTextLayoutExtents" %draw-text-layout-extents) :void
-  (tl :pointer)
+  (tl ui-type)
   (width :pointer)
   (height :pointer))
 
 (cffi:defcfun ("uiFontButtonFont" %font-button-font) :void
-  (b control-type)
+  (b ui-type)
   (desc (:pointer (:struct %font-descriptor))))
 
 (cffi:defcfun ("uiFontButtonOnChanged" %font-button-on-changed) :void
-  (b control-type)
+  (b ui-type)
   (f :pointer)
   (data :pointer))
 
@@ -1051,126 +1058,127 @@
 (cffi:defcfun ("uiFreeFontButtonFont" %free-font-button-font) :void
   (desc (:pointer (:struct %font-descriptor))))
 
-(cffi:defcenum (%modifiers :unsigned-int)
-	(:modifier-ctrl #.(cl:ash 1 0))
-	(:modifier-alt #.(cl:ash 1 1))
-	(:modifier-shift #.(cl:ash 1 2))
-	(:modifier-super #.(cl:ash 1 3)))
+(cffi:defbitfield (%modifiers :unsigned-int)
+	:ctrl
+	:alt
+	:shift
+	:super)
 
 (cffi:defcstruct %area-mouse-event
-	(x :double)
-	(y :double)
-	(area-width :double)
-	(area-height :double)
-	(down :int)
-	(up :int)
-	(count :int)
-	(modifiers %modifiers)
-	(held1to64 :pointer))
+	(:x :double)
+	(:y :double)
+	(:area-width :double)
+	(:area-height :double)
+	(:down :int)
+	(:up :int)
+	(:count :int)
+	(:modifiers %modifiers)
+	(:held1to64 :uint64))
 
 (cffi:defcenum (%ext-key :unsigned-int)
-	(:ext-key-escape 1)
-	:ext-key-insert
-	:ext-key-delete
-	:ext-key-home
-	:ext-key-end
-	:ext-key-page-up
-	:ext-key-page-down
-	:ext-key-up
-	:ext-key-down
-	:ext-key-left
-	:ext-key-right
-	:ext-key-f1
-	:ext-key-f2
-	:ext-key-f3
-	:ext-key-f4
-	:ext-key-f5
-	:ext-key-f6
-	:ext-key-f7
-	:ext-key-f8
-	:ext-key-f9
-	:ext-key-f10
-	:ext-key-f11
-	:ext-key-f12
-	:ext-key-n0
-	:ext-key-n1
-	:ext-key-n2
-	:ext-key-n3
-	:ext-key-n4
-	:ext-key-n5
-	:ext-key-n6
-	:ext-key-n7
-	:ext-key-n8
-	:ext-key-n9
-	:ext-key-n-dot
-	:ext-key-n-enter
-	:ext-key-n-add
-	:ext-key-n-subtract
-	:ext-key-n-multiply
-	:ext-key-n-divide)
+  :none
+	:escape
+	:insert
+	:delete
+	:home
+	:end
+	:page-up
+	:page-down
+	:up
+	:down
+	:left
+	:right
+	:f1
+	:f2
+	:f3
+	:f4
+	:f5
+	:f6
+	:f7
+	:f8
+	:f9
+	:f10
+	:f11
+	:f12
+	:n0
+	:n1
+	:n2
+	:n3
+	:n4
+	:n5
+	:n6
+	:n7
+	:n8
+	:n9
+	:n-dot
+	:n-enter
+	:n-add
+	:n-subtract
+	:n-multiply
+	:n-divide)
 
 (cffi:defcstruct %area-key-event
-	(key :char)
-	(ext-key %ext-key)
-	(modifier :unsigned-int)
-	(modifiers :unsigned-int)
-	(up :int))
+	(:key :char)
+	(:ext-key %ext-key)
+	(:modifier %modifiers)
+	(:modifiers %modifiers)
+	(:up (:boolean :int)))
 
 (cffi:defcfun ("uiColorButtonColor" %color-button-color) :void
-  (button control-type)
+  (button ui-type)
   (r (:pointer :double))
   (g (:pointer :double))
   (b (:pointer :double))
   (a (:pointer :double)))
 
 (cffi:defcfun ("uiColorButtonSetColor" %color-button-set-color) :void
-  (button control-type)
+  (button ui-type)
   (r :double)
   (g :double)
   (b :double)
   (a :double))
 
 (cffi:defcfun ("uiColorButtonOnChanged" %color-button-on-changed) :void
-  (button control-type)
+  (button ui-type)
   (f :pointer)
   (data :pointer))
 
 (cffi:defcfun ("uiNewColorButton" %new-color-button) :pointer)
 
 (cffi:defcfun ("uiFormAppend" %form-append) :void
-  (f control-type)
+  (f ui-type)
   (label :string)
-  (c control-type)
+  (c ui-type)
   (stretchy (:boolean :int)))
 
 (cffi:defcfun ("uiFormDelete" %form-delete) :void
-  (f control-type)
+  (f ui-type)
   (index :int))
 
 (cffi:defcfun ("uiFormPadded" %form-padded) (:boolean :int)
-  (f control-type))
+  (f ui-type))
 
 (cffi:defcfun ("uiFormSetPadded" %form-set-padded) :void
-  (f control-type)
+  (f ui-type)
   (padded (:boolean :int)))
 
 (cffi:defcfun ("uiNewForm" %new-form) :pointer)
 
 (cffi:defcenum (%align :unsigned-int)
-	:align-fill
-	:align-start
-	:align-center
-	:align-end)
+	:fill
+	:start
+	:center
+	:end)
 
 (cffi:defcenum (%at :unsigned-int)
-	:at-leading
-	:at-top
-	:at-trailing
-	:at-bottom)
+	:leading
+	:top
+	:trailing
+	:bottom)
 
 (cffi:defcfun ("uiGridAppend" %grid-append) :void
-  (g control-type)
-  (c control-type)
+  (g ui-type)
+  (c ui-type)
   (left :int)
   (top :int)
   (xspan :int)
@@ -1181,9 +1189,9 @@
   (valign %align))
 
 (cffi:defcfun ("uiGridInsertAt" %grid-insert-at) :void
-  (g control-type)
-  (c control-type)
-  (existing control-type)
+  (g ui-type)
+  (c ui-type)
+  (existing ui-type)
   (at %at)
   (xspan :int)
   (yspan :int)
@@ -1193,10 +1201,10 @@
   (valign %align))
 
 (cffi:defcfun ("uiGridPadded" %grid-padded) (:boolean :int)
-  (g control-type))
+  (g ui-type))
 
 (cffi:defcfun ("uiGridSetPadded" %grid-set-padded) :void
-  (g control-type)
+  (g ui-type)
   (padded (:boolean :int)))
 
 (cffi:defcfun ("uiNewGrid" %new-grid) :pointer)
@@ -1219,10 +1227,10 @@
   (v :pointer))
 
 (cffi:defcenum (%table-value-type :unsigned-int)
-	:table-value-type-string
-	:table-value-type-image
-	:table-value-type-int
-	:table-value-type-color)
+	:string
+	:image
+	:int
+	:color)
 
 (cffi:defcfun ("uiTableValueGetType" %table-value-get-type) :unsigned-int
   (v :pointer))

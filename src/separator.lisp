@@ -2,7 +2,7 @@
 
 (defclass horizontal-separator (control)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance horizontal-separator) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
@@ -10,7 +10,7 @@
 
 (defclass vertical-separator (control)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance vertical-separator) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))

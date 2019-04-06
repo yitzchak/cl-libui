@@ -1,9 +1,11 @@
 (defpackage #:ui
-  (:use #:alexandria #:cl)
+  (:use #:alexandria #:cl #:iterate)
   (:export
     #:append-child
     #:append-item
     #:append-text
+    #:area
+    #:attributed-string
     #:button
     #:checkbox
     #:checked
@@ -34,7 +36,12 @@
     #:on-changed
     #:on-clicked
     #:on-closing
+    #:on-drag-broken
+    #:on-draw
     #:on-init
+    #:on-key
+    #:on-mouse
+    #:on-mouse-crossed
     #:on-should-quit
     #:open-file
     #:padded
@@ -48,6 +55,7 @@
     #:spinbox
     #:tab
     #:text
+    #:text-layout
     #:time-picker
     #:title
     #:value

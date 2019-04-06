@@ -5,9 +5,9 @@
      :accessor color
      :initarg :color
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object color-button) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object color-button) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('color
@@ -21,7 +21,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object color-button) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object color-button) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('color

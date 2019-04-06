@@ -2,7 +2,7 @@
 
 (defclass tab (control)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance tab) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
@@ -10,4 +10,6 @@
         (%new-tab)))
 
 (defmethod append-child ((object tab) child &rest options &key &allow-other-keys)
-  (%tab-append (handle object) (getf options :title) (handle child)))
+  (%tab-append object (getf options :title) child)
+  (when (getf options :margined)
+    (%tab-set-margined object (1- (%tab-num-pages object)) t)))

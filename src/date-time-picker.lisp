@@ -6,9 +6,9 @@
      :initarg :value
      :initform ""
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object base-date-time-picker) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object base-date-time-picker) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('value
@@ -25,7 +25,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object base-date-time-picker) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object base-date-time-picker) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('value
@@ -44,7 +44,7 @@
 
 (defclass date-time-picker (base-date-time-picker)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance date-time-picker) &rest initargs &key &allow-other-keys)
 (declare (ignore initargs))
@@ -54,7 +54,7 @@
 
 (defclass date-picker (base-date-time-picker)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance date-picker) &rest initargs &key &allow-other-keys)
 (declare (ignore initargs))
@@ -64,7 +64,7 @@
 
 (defclass time-picker (base-date-time-picker)
   ()
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance time-picker) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))

@@ -6,9 +6,9 @@
      :initarg :selected
      :initform nil
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object combobox) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object combobox) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('selected
@@ -17,7 +17,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object combobox) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object combobox) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('selected
@@ -27,10 +27,12 @@
     (call-next-method)))
 
 (defmethod initialize-instance :before ((instance combobox) &rest initargs &key &allow-other-keys)
-  (declare (ignore initargs))
   (setf (handle instance)
         (%new-combobox))
-  (%combobox-on-selected instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+  (%combobox-on-selected instance (cffi:callback on-changed-callback) (cffi:null-pointer))
+  (iter
+    (for item in (getf initargs :items))
+    (%combobox-append instance item)))
 
 (defmethod append-item ((object combobox) item &rest options &key &allow-other-keys)
   (declare (ignore options))
@@ -42,9 +44,9 @@
      :initarg :selected
      :initform nil
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object radio-buttons) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object radio-buttons) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('selected
@@ -53,7 +55,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object radio-buttons) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object radio-buttons) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('selected
@@ -63,10 +65,12 @@
     (call-next-method)))
 
 (defmethod initialize-instance :before ((instance radio-buttons) &rest initargs &key &allow-other-keys)
-  (declare (ignore initargs))
   (setf (handle instance)
         (%new-radio-buttons))
-  (%radio-buttons-on-selected instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+  (%radio-buttons-on-selected instance (cffi:callback on-changed-callback) (cffi:null-pointer))
+  (iter
+    (for item in (getf initargs :items))
+    (%radio-buttons-append instance item)))
 
 (defmethod append-item ((object radio-buttons) item &rest options &key &allow-other-keys)
   (declare (ignore options))
@@ -78,9 +82,9 @@
      :initarg :text
      :initform nil
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object editable-combobox) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object editable-combobox) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('text
@@ -89,7 +93,7 @@
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object editable-combobox) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object editable-combobox) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('text
@@ -99,10 +103,12 @@
     (call-next-method)))
 
 (defmethod initialize-instance :before ((instance editable-combobox) &rest initargs &key &allow-other-keys)
-  (declare (ignore initargs))
   (setf (handle instance)
         (%new-editable-combobox))
-  (%editable-combobox-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+  (%editable-combobox-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer))
+  (iter
+    (for item in (getf initargs :items))
+    (%editable-combobox-append instance item)))
 
 (defmethod append-item ((object editable-combobox) item &rest options &key &allow-other-keys)
   (declare (ignore options))

@@ -6,7 +6,8 @@
   :depends-on (
     #:alexandria
     #:cffi
-    #:closer-mop)
+    #:closer-mop
+    #:iterate)
   :components
     ((:module src
       :serial t
@@ -14,7 +15,11 @@
         ((:file "packages")
          (:file "libui")
          (:file "core")
+         (:file "text-layout")
+         (:file "draw-context")
+         (:file "attribute")
          (:file "control")
+         (:file "area")
          (:file "box")
          (:file "button")
          (:file "checkbox")

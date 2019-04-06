@@ -6,7 +6,7 @@
 (defmethod on-clicked (control)
   (declare (ignore control)))
 
-(cffi:defcallback on-clicked-callback (:boolean :int) ((control control-type) (data :pointer))
+(cffi:defcallback on-clicked-callback (:boolean :int) ((control ui-type) (data :pointer))
   (declare (ignore data))
   (on-clicked control))
 
@@ -16,22 +16,22 @@
      :initarg :text
      :initform ""
      :allocation :ui-instance))
-  (:metaclass control-metaclass))
+  (:metaclass ui-metaclass))
 
-(defmethod closer-mop:slot-value-using-class ((class control-metaclass) (object button) (slot closer-mop:standard-effective-slot-definition))
+(defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object button) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('text
-        (%button-text (handle object)))
+        (%button-text object))
       (t
         (call-next-method)))
     (call-next-method)))
 
-(defmethod (setf closer-mop:slot-value-using-class) (new-value (class control-metaclass) (object button) (slot closer-mop:standard-effective-slot-definition))
+(defmethod (setf closer-mop:slot-value-using-class) (new-value (class ui-metaclass) (object button) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
     (switch ((closer-mop:slot-definition-name slot) :test #'equal)
       ('text
-        (%button-set-text (handle object) new-value))
+        (%button-set-text object new-value))
       (t
         (call-next-method)))
     (call-next-method)))
