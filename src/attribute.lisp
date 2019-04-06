@@ -68,10 +68,6 @@
 ;         (call-next-method)))
 ;     (call-next-method)))
 
-(defmethod initialize-instance :before ((instance attributed-string) &rest initargs &key &allow-other-keys)
-  (setf (handle instance)
-        (%new-attributed-string (or (getf initargs :text) ""))))
-
 (defmethod append-text ((object attributed-string) text &rest options &key &allow-other-keys)
   (iter
     (with start = (%attributed-string-len object))
@@ -79,3 +75,12 @@
     (initially (%attributed-string-append-unattributed object text))
     (for attr in (plist-to-attributes options))
     (%attributed-string-set-attribute object attr start end)))
+
+(defmethod initialize-instance :before ((instance attributed-string) &rest initargs &key &allow-other-keys)
+  (let ((text (getf initargs :text)))
+    (setf (handle instance)
+          (%new-attributed-string (if (stringp text) text "")))
+    (when (listp text)
+      (iter
+        (for span in text)
+        (apply #'append-text instance span)))))

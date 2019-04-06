@@ -19,49 +19,38 @@
   (ui::%area-queue-redraw-all *area*))
 
 (defun make-attributed-string ()
-  (let ((attrst (make-instance 'ui:attributed-string :text
-    "Drawing strings with libui is done with the ui:attributed-string and ui:text-layout objects.
-ui:attributed-string lets you have a variety of attributes: ")))
-    (ui:append-text attrst "font family"
-                    :family "Courier New")
-    (ui:append-text attrst ", ")
-    (ui:append-text attrst "font size"
-                    :size 18.0d0)
-    (ui:append-text attrst ", ")
-    (ui:append-text attrst "font weight"
-                    :weight :bold)
-    (ui:append-text attrst ", ")
-    (ui:append-text attrst "font italicness"
-                    :italic :italic)
-    (ui:append-text attrst ", ")
-    (ui:append-text attrst "font stretch"
-                    :stretch :condensed)
-    (ui:append-text attrst ", ")
-    (ui:append-text attrst "text color"
-                    :color '(:red 0.75d0 :green 0.25d0 :blue 0.5d0 :alpha 0.75d0))
-    (ui:append-text attrst ", ")
-    (ui:append-text attrst "text background color"
-                    :color '(:red 0.5d0 :green 0.5d0 :blue 0.25d0 :alpha 0.5d0))
-    (ui:append-text attrst ", ")
-    (ui:append-text attrst "underline style"
-                    :underline :single)
-    (ui:append-text attrst ", and ")
-    (ui:append-text attrst "underline color"
-                    :underline :double
-                    :underline-color '(:underline :custom :red 1.0d0 :green 0.0d0 :blue 0.5d0 :alpha 1.0d0))
-    (ui:append-text attrst ". Furthermore, there are attributes allowing for ")
-    (ui:append-text attrst "special underlines for indicating spelling errors"
-                    :underline :suggestion
-                    :underline-color '(:underline :spelling :red 0d0 :green 0d0 :blue 0d0 :alpha 0d0))
-    (ui:append-text attrst " (and other types of errors) and control over OpenType features such as ligatures (for instance, ")
-    (ui:append-text attrst "afford"
-                    :features '(:liga 0))
-    (ui:append-text attrst " vs. ")
-    (ui:append-text attrst "afford"
-                    :features '(:liga 1))
-    (ui:append-text attrst ").
-Use the controls opposite to the text to control properties of the text.")
-    attrst))
+  (make-instance 'ui:attributed-string
+    :text '(("Drawing strings with libui is done with the ui:attributed-string and ui:text-layout objects.
+ui:attributed-string lets you have a variety of attributes: ")
+            ("font family" :family "Courier New")
+            (", ")
+            ("font size" :size 18.0d0)
+            (", ")
+            ("font weight" :weight :bold)
+            (", ")
+            ("font italicness" :italic :italic)
+            (", ")
+            ("font stretch" :stretch :condensed)
+            (", ")
+            ("text color" :color (:red 0.75d0 :green 0.25d0 :blue 0.5d0 :alpha 0.75d0))
+            (", ")
+            ("text background color" :color (:red 0.5d0 :green 0.5d0 :blue 0.25d0 :alpha 0.5d0))
+            (", ")
+            ("underline style" :underline :single)
+            (", and ")
+            ("underline color"
+              :underline :double
+              :underline-color (:underline :custom :red 1.0d0 :green 0.0d0 :blue 0.5d0 :alpha 1.0d0))
+            (". Furthermore, there are attributes allowing for ")
+            ("special underlines for indicating spelling errors"
+              :underline :suggestion
+              :underline-color (:underline :spelling :red 0d0 :green 0d0 :blue 0d0 :alpha 0d0))
+            (" (and other types of errors) and control over OpenType features such as ligatures (for instance, ")
+            ("afford" :features (:liga 0))
+            (" vs. ")
+            ("afford" :features (:liga 1))
+            (").
+Use the controls opposite to the text to control properties of the text."))))
 
 (defmethod ui:on-init ()
   (let ((hbox (make-instance 'ui:horizontal-box :padded t))
