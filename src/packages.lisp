@@ -1,6 +1,7 @@
 (defpackage #:ui
   (:use #:alexandria #:cl #:iterate)
   (:export
+    #:add-rectangle
     #:append-child
     #:append-item
     #:append-text
@@ -45,6 +46,7 @@
     #:on-should-quit
     #:open-file
     #:padded
+    #:path
     #:password-entry
     #:progress-bar
     #:radio-buttons

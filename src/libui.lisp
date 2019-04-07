@@ -26,7 +26,7 @@
 	:stop)
 
 (cffi:defcstruct %init-options
-	(size :ulong))
+	(size size-t))
 
 (cffi:defcfun ("uiInit" %init) :pointer
   (options (:pointer (:struct %init-options))))
@@ -112,7 +112,7 @@
   (arg0 ui-type))
 
 ; (cffi:defcfun ("uiAllocControl" %alloc-control) :pointer
-;   (n :pointer)
+;   (n size-t)
 ;   (OSsig :pointer)
 ;   (typesig :pointer)
 ;   (typenamestr :string))
@@ -617,7 +617,7 @@
 
 (cl:defconstant %draw-default-miter-limit 10.0d0)
 
-(cffi:defcenum (%draw-file-mode :unsigned-int)
+(cffi:defcenum (%draw-fill-mode :unsigned-int)
 	:winding
 	:alternate)
 
@@ -629,26 +629,26 @@
 	(:m31 :double)
 	(:m32 :double))
 
-(cffi:defcstruct %draw-brush
-	(type %draw-brush-type)
-	(r :double)
-	(g :double)
-	(b :double)
-	(a :double)
-	(x0 :double)
-	(y0 :double)
-	(x1 :double)
-	(y1 :double)
-	(outer-radius :double)
-	(stops :pointer)
-	(num-stops :pointer))
-
 (cffi:defcstruct %draw-brush-gradient-stop
-	(pos :double)
-	(r :double)
-	(g :double)
-	(b :double)
-	(A :double))
+	(:position :double)
+	(:red :double)
+	(:green :double)
+	(:blue :double)
+	(:alpha :double))
+
+(cffi:defcstruct (%draw-brush :class draw-brush-type)
+	(:type %draw-brush-type)
+	(:red :double)
+	(:green :double)
+	(:blue :double)
+	(:alpha :double)
+	(:x0 :double)
+	(:y0 :double)
+	(:x1 :double)
+	(:y1 :double)
+	(:outer-radius :double)
+	(:stops (:pointer (:struct %draw-brush-gradient-stop)))
+	(:num-stops size-t))
 
 (cffi:defcstruct %draw-stroke-params
 	(cap %draw-line-cap)
@@ -656,11 +656,11 @@
 	(thickness :double)
 	(miter-limit :double)
 	(dashes :pointer)
-	(num-dashes :pointer)
+	(num-dashes size-t)
 	(dash-phase :double))
 
 (cffi:defcfun ("uiDrawNewPath" %draw-new-path) :pointer
-  (fill-mode :unsigned-int))
+  (fill-mode %draw-fill-mode))
 
 (cffi:defcfun ("uiDrawFreePath" %draw-free-path) :void
   (p :pointer))
@@ -680,12 +680,12 @@
   (negative :int))
 
 (cffi:defcfun ("uiDrawPathLineTo" %draw-path-line-to) :void
-  (p :pointer)
+  (p ui-type)
   (x :double)
   (y :double))
 
 (cffi:defcfun ("uiDrawPathArcTo" %draw-path-arc-to) :void
-  (p :pointer)
+  (p ui-type)
   (x-center :double)
   (y-center :double)
   (radius :double)
@@ -694,7 +694,7 @@
   (negative :int))
 
 (cffi:defcfun ("uiDrawPathBezierTo" %draw-path-bezier-to) :void
-  (p :pointer)
+  (p ui-type)
   (c1x :double)
   (c1y :double)
   (c2x :double)
@@ -703,17 +703,17 @@
   (end-y :double))
 
 (cffi:defcfun ("uiDrawPathCloseFigure" %draw-path-close-figure) :void
-  (p :pointer))
+  (p ui-type))
 
 (cffi:defcfun ("uiDrawPathAddRectangle" %draw-path-add-rectangle) :void
-  (p :pointer)
+  (p ui-type)
   (x :double)
   (y :double)
   (width :double)
   (height :double))
 
 (cffi:defcfun ("uiDrawPathEnd" %draw-path-end) :void
-  (p :pointer))
+  (p ui-type))
 
 (cffi:defcfun ("uiDrawStroke" %draw-stroke) :void
   (c :pointer)
@@ -722,65 +722,65 @@
   (p :pointer))
 
 (cffi:defcfun ("uiDrawFill" %draw-fill) :void
-  (c :pointer)
-  (path :pointer)
-  (b :pointer))
+  (c draw-context-type)
+  (path ui-type)
+  (b (:pointer (:struct %draw-brush))))
 
 (cffi:defcfun ("uiDrawMatrixSetIdentity" %draw-matrix-set-identity) :void
-  (m :pointer))
+  (m ui-type))
 
 (cffi:defcfun ("uiDrawMatrixTranslate" %draw-matrix-translate) :void
-  (m :pointer)
+  (m ui-type)
   (x :double)
   (y :double))
 
 (cffi:defcfun ("uiDrawMatrixScale" %draw-matrix-scale) :void
-  (m :pointer)
+  (m ui-type)
   (x-center :double)
   (y-center :double)
   (x :double)
   (y :double))
 
 (cffi:defcfun ("uiDrawMatrixRotate" %draw-matrix-rotate) :void
-  (m :pointer)
+  (m ui-type)
   (x :double)
   (y :double)
   (amount :double))
 
 (cffi:defcfun ("uiDrawMatrixSkew" %draw-matrix-skew) :void
-  (m :pointer)
+  (m ui-type)
   (x :double)
   (y :double)
   (xamount :double)
   (yamount :double))
 
 (cffi:defcfun ("uiDrawMatrixMultiply" %draw-matrixMultiply) :void
-  (dest :pointer)
-  (src :pointer))
+  (dest ui-type)
+  (src ui-type))
 
-(cffi:defcfun ("uiDrawMatrixInvertible" %draw-matrix-invertible) :int
-  (m :pointer))
+(cffi:defcfun ("uiDrawMatrixInvertible" %draw-matrix-invertible) (:boolean :int)
+  (m ui-type))
 
-(cffi:defcfun ("uiDrawMatrixInvert" %draw-matrix-invert) :int
-  (m :pointer))
+(cffi:defcfun ("uiDrawMatrixInvert" %draw-matrix-invert) (:boolean :int)
+  (m ui-type))
 
 (cffi:defcfun ("uiDrawMatrixTransformPoint" %draw-matrix-transform-point) :void
-  (m :pointer)
-  (x :pointer)
-  (y :pointer))
+  (m ui-type)
+  (x (:pointer :double))
+  (y (:pointer :double)))
 
 (cffi:defcfun ("uiDrawMatrixTransformSize" %draw-matrix-transform-size) :void
-  (m :pointer)
-  (x :pointer)
-  (y :pointer))
+  (m ui-type)
+  (x (:pointer :double))
+  (y (:pointer :double)))
 
 (cffi:defcfun ("uiDrawTransform" %draw-transform) :void
-  (c :pointer)
-  (m :pointer))
+  (c draw-context-type)
+  (m ui-type))
 
 (cffi:defcfun ("uiDrawClip" %draw-clip) :void
-  (c :pointer)
-  (path :pointer))
+  (c draw-context-type)
+  (path ui-type))
 
 (cffi:defcfun ("uiDrawSave" %draw-save) :void
   (c :pointer))
@@ -970,7 +970,7 @@
 (cffi:defcfun ("uiAttributedStringString" %attributed-string-string) :string
   (s ui-type))
 
-(cffi:defcfun ("uiAttributedStringLen" %attributed-string-len) :uint
+(cffi:defcfun ("uiAttributedStringLen" %attributed-string-len) size-t
   (s ui-type))
 
 (cffi:defcfun ("uiAttributedStringAppendUnattributed" %attributed-string-append-unattributed) :void
@@ -980,32 +980,32 @@
 (cffi:defcfun ("uiAttributedStringInsertAtUnattributed" %attributed-string-insert-unattributed) :void
   (s ui-type)
   (str :string)
-  (at :uint))
+  (at size-t))
 
 (cffi:defcfun ("uiAttributedStringDelete" %attributed-string-delete) :void
   (s ui-type)
-  (start :uint)
-  (end :uint))
+  (start size-t)
+  (end size-t))
 
 (cffi:defcfun ("uiAttributedStringSetAttribute" %attributed-string-set-attribute) :void
   (s ui-type)
   (a :pointer)
-  (start :uint)
-  (end :uint))
+  (start size-t)
+  (end size-t))
 
 (cffi:defcfun ("uiAttributedStringForEachAttribute" %attributed-string-for-each-attribute) :void
   (s ui-type)
   (f :pointer)
   (data :pointer))
 
-(cffi:defcfun ("uiAttributedStringNumGraphemes" %attributed-string-num-graphemes) :pointer
+(cffi:defcfun ("uiAttributedStringNumGraphemes" %attributed-string-num-graphemes) size-t
   (s ui-type))
 
-(cffi:defcfun ("uiAttributedStringByteIndexToGrapheme" %attributed-string-byte-index-to-grapheme) :pointer
+(cffi:defcfun ("uiAttributedStringByteIndexToGrapheme" %attributed-string-byte-index-to-grapheme) size-t
   (s ui-type)
   (pos :pointer))
 
-(cffi:defcfun ("uiAttributedStringGraphemeToByteIndex" %attributed-string-grapheme-to-byte-index) :pointer
+(cffi:defcfun ("uiAttributedStringGraphemeToByteIndex" %attributed-string-grapheme-to-byte-index) size-t
   (s ui-type)
   (pos :pointer))
 
@@ -1041,8 +1041,8 @@
 
 (cffi:defcfun ("uiDrawTextLayoutExtents" %draw-text-layout-extents) :void
   (tl ui-type)
-  (width :pointer)
-  (height :pointer))
+  (width (:pointer :double))
+  (height (:pointer :double)))
 
 (cffi:defcfun ("uiFontButtonFont" %font-button-font) :void
   (b ui-type)

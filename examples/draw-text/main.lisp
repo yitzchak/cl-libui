@@ -6,13 +6,19 @@
 (defvar *area* nil)
 (defvar *attributed-string* nil)
 
+(defparameter +margin+ 20d0)
+
 (defmethod ui:on-draw (object params)
   (declare (ignore object))
   (let ((tl (make-instance 'ui:text-layout :string *attributed-string*
                                            :default-font (ui:font *font-button*)
-                                           :width (getf params :area-width)
-                                           :align (ui:selected *align-combobox*))))
-    (ui::%draw-text (getf params :context) tl 0d0 0d0)))
+                                           :width (- (getf params :area-width) (* 2d0 +margin+))
+                                           :align (ui:selected *align-combobox*)))
+        (p (make-instance 'ui:path :fill-mode :winding)))
+    (ui:add-rectangle p 0d0 0d0 (getf params :area-width) (getf params :area-height))
+    (ui::%draw-path-end p)
+    (ui::draw-fill (getf params :context) p '(:type :solid :red 1.0d0 :green 1.0d0 :blue 1.0d0 :alpha 1.0d0))
+    (ui::%draw-text (getf params :context) tl +margin+ +margin+)))
 
 (defmethod ui:on-changed (object)
   (declare (ignore object))

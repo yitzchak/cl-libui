@@ -3,6 +3,7 @@
   :version "0.1"
   :author "Tarn W. Burton"
   :license "MIT"
+  :defsystem-depends-on (:cffi-grovel)
   :depends-on (
     #:alexandria
     #:cffi
@@ -13,9 +14,11 @@
       :serial t
       :components
         ((:file "packages")
+         (:cffi-grovel-file "grovel")
          (:file "libui")
          (:file "core")
          (:file "text-layout")
+         (:file "path")
          (:file "draw-context")
          (:file "attribute")
          (:file "control")
