@@ -615,8 +615,6 @@
 	:round
 	:bevel)
 
-(cl:defconstant %draw-default-miter-limit 10.0d0)
-
 (cffi:defcenum (%draw-fill-mode :unsigned-int)
 	:winding
 	:alternate)

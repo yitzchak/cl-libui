@@ -17,6 +17,7 @@
     #:control
     #:date-picker
     #:date-time-picker
+    #:default-miter-limit
     #:editable-combobox
     #:enabled
     #:entry
