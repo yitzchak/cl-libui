@@ -653,7 +653,7 @@
 	(join %draw-line-join)
 	(thickness :double)
 	(miter-limit :double)
-	(dashes :pointer)
+	(dashes (:pointer :double))
 	(num-dashes size-t)
 	(dash-phase :double))
 
@@ -664,18 +664,18 @@
   (p :pointer))
 
 (cffi:defcfun ("uiDrawPathNewFigure" %draw-path-new-figure) :void
-  (p :pointer)
+  (p ui-type)
   (x :double)
   (y :double))
 
 (cffi:defcfun ("uiDrawPathNewFigureWithArc" %draw-path-new-figure-with-arc) :void
-  (p :pointer)
+  (p ui-type)
   (x-center :double)
   (y-center :double)
   (radius :double)
   (start-angle :double)
   (sweep :double)
-  (negative :int))
+  (negative (:boolean :int)))
 
 (cffi:defcfun ("uiDrawPathLineTo" %draw-path-line-to) :void
   (p ui-type)
@@ -714,10 +714,10 @@
   (p ui-type))
 
 (cffi:defcfun ("uiDrawStroke" %draw-stroke) :void
-  (c :pointer)
-  (path :pointer)
-  (b :pointer)
-  (p :pointer))
+  (c draw-context-type)
+  (path ui-type)
+  (b (:pointer (:struct %draw-brush)))
+  (p (:pointer (:struct %draw-stroke-params))))
 
 (cffi:defcfun ("uiDrawFill" %draw-fill) :void
   (c draw-context-type)
@@ -801,7 +801,7 @@
 	:underline-color
 	:features)
 
-(cffi:defcfun ("uiAttributeGetType" %attribute-get-type) :unsigned-int
+(cffi:defcfun ("uiAttributeGetType" %attribute-get-type) %attribute-type
   (a :pointer))
 
 (cffi:defcfun ("uiNewFamilyAttribute" %new-family-attribute) :pointer
@@ -1067,8 +1067,8 @@
 	(:y :double)
 	(:area-width :double)
 	(:area-height :double)
-	(:down :int)
-	(:up :int)
+	(:down (:boolean :int))
+	(:up (:boolean :int))
 	(:count :int)
 	(:modifiers %modifiers)
 	(:held1to64 :uint64))
