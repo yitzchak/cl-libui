@@ -8,7 +8,8 @@
     #:alexandria
     #:cffi
     #:closer-mop
-    #:iterate)
+    #:iterate
+    #:trivial-garbage)
   :components
     ((:module src
       :serial t

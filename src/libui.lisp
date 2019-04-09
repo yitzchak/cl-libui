@@ -117,8 +117,8 @@
 ;   (typesig :pointer)
 ;   (typenamestr :string))
 ;
-; (cffi:defcfun ("uiFreeControl" %free-control) :void
-;   (arg0 ui-type))
+(cffi:defcfun ("uiFreeControl" %free-control) :void
+  (arg0 :pointer))
 
 ; (cffi:defcfun ("uiControlVerifySetParent" %control-verify-set-parent) :void
 ;   (arg0 :pointer)

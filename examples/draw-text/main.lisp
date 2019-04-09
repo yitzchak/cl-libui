@@ -1,28 +1,38 @@
 (ql:quickload :cl-libui)
 
-(defvar *window* nil)
-(defvar *font-button* nil)
-(defvar *align-combobox* nil)
-(defvar *area* nil)
-(defvar *attributed-string* nil)
-
 (defparameter +margin+ 20d0)
+
+(defparameter *main* nil)
+
+(defclass draw-text ()
+  ((window
+     :initarg :window)
+   (font-button
+     :initarg :font-button)
+   (align-combobox
+     :initarg :align-combobox)
+   (area
+     :initarg :area)
+   (attributed-string
+     :initarg :attributed-string)))
 
 (defmethod ui:on-draw (object params)
   (declare (ignore object))
-  (let ((tl (make-instance 'ui:text-layout :string *attributed-string*
-                                           :default-font (ui:font *font-button*)
-                                           :width (- (getf params :area-width) (* 2d0 +margin+))
-                                           :align (ui:selected *align-combobox*)))
-        (p (make-instance 'ui:path :fill-mode :winding)))
-    (ui:add-rectangle p 0d0 0d0 (getf params :area-width) (getf params :area-height))
-    (ui::%draw-path-end p)
-    (ui::draw-fill (getf params :context) p '(:type :solid :red 1.0d0 :green 1.0d0 :blue 1.0d0 :alpha 1.0d0))
-    (ui::%draw-text (getf params :context) tl +margin+ +margin+)))
+  (with-slots (attributed-string font-button align-combobox) *main*
+    (let ((tl (make-instance 'ui:text-layout :string attributed-string
+                                             :default-font (ui:font font-button)
+                                             :width (- (getf params :area-width) (* 2d0 +margin+))
+                                             :align (ui:selected align-combobox)))
+          (p (make-instance 'ui:path :fill-mode :winding)))
+      (ui:add-rectangle p 0d0 0d0 (getf params :area-width) (getf params :area-height))
+      (ui::%draw-path-end p)
+      (ui::draw-fill (getf params :context) p '(:type :solid :red 1.0d0 :green 1.0d0 :blue 1.0d0 :alpha 1.0d0))
+      (ui::%draw-text (getf params :context) tl +margin+ +margin+))))
 
 (defmethod ui:on-changed (object)
   (declare (ignore object))
-  (ui::%area-queue-redraw-all *area*))
+  (with-slots (area) *main*
+    (ui::%area-queue-redraw-all area)))
 
 (defun make-attributed-string ()
   (make-instance 'ui:attributed-string
@@ -59,26 +69,30 @@ ui:attributed-string lets you have a variety of attributes: ")
 Use the controls opposite to the text to control properties of the text."))))
 
 (defmethod ui:on-init ()
-  (let ((hbox (make-instance 'ui:horizontal-box :padded t))
-        (vbox (make-instance 'ui:vertical-box :padded t))
-        (form (make-instance 'ui:form :padded t)))
-    (setq *attributed-string* (make-attributed-string))
-    (setq *window* (make-instance 'ui:window :title "libui Text-Drawing Example"
-                                             :width 640 :height 480
-                                             :has-menubar t :visible t :margined t))
-    (setf (ui:child *window*) hbox)
-    (ui:append-child hbox vbox)
-    (setq *font-button* (make-instance 'ui:font-button))
-    (ui:append-child vbox *font-button*)
-    (ui:append-child vbox form)
-    (setq *align-combobox* (make-instance 'ui:combobox :items '("Left" "Center" "Right")
-                                                       :selected 0))
-    (ui:append-child form *align-combobox* :label "Alignment")
-    (setq *area* (make-instance 'ui:area))
-    (ui:append-child hbox *area* :stretch t)))
+  (setq *main*
+    (make-instance 'draw-text
+      :window (make-instance 'ui:window :title "libui Text-Drawing Example"
+                                        :width 640 :height 480
+                                        :has-menubar t :visible t :margined t)
+      :font-button (make-instance 'ui:font-button)
+      :attributed-string (make-attributed-string)
+      :area (make-instance 'ui:area)
+      :align-combobox (make-instance 'ui:combobox :items '("Left" "Center" "Right")
+                                                  :selected 0)))
+  (with-slots (window font-button area align-combobox) *main*
+    (let ((hbox (make-instance 'ui:horizontal-box :padded t))
+          (vbox (make-instance 'ui:vertical-box :padded t))
+          (form (make-instance 'ui:form :padded t)))
+      (setf (ui:child window) hbox)
+      (ui:append-child hbox vbox)
+      (ui:append-child vbox font-button)
+      (ui:append-child vbox form)
+      (ui:append-child form align-combobox :label "Alignment")
+      (ui:append-child hbox area :stretch t))))
 
 (defmethod ui:on-closing (control)
   (declare (ignore control))
+  (setq *main* nil)
   (ui::%quit)
   t)
 

@@ -15,11 +15,12 @@
      :allocation :ui-instance))
   (:metaclass ui-metaclass))
 
-(defparameter *controls* (make-hash-table))
+(defparameter *controls* (trivial-garbage:make-weak-hash-table :weakness :value))
 
 (defmethod initialize-instance :after ((instance control) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (setf (gethash (handle instance) *controls*) instance))
+  (let ((handle (handle instance)))
+    (setf (gethash handle *controls*) instance)))
 
 (defmethod cffi:translate-to-foreign (object (type ui-type))
   (declare (ignore type))

@@ -77,9 +77,12 @@
     (%attributed-string-set-attribute object attr start end)))
 
 (defmethod initialize-instance :before ((instance attributed-string) &rest initargs &key &allow-other-keys)
-  (let ((text (getf initargs :text)))
-    (setf (handle instance)
-          (%new-attributed-string (if (stringp text) text "")))
+  (let* ((text (getf initargs :text))
+         (h (%new-attributed-string (if (stringp text) text ""))))
+    (setf (handle instance) h)
+    (trivial-garbage:finalize instance
+      (lambda ()
+        (%free-attributed-string h)))
     (when (listp text)
       (iter
         (for span in text)
