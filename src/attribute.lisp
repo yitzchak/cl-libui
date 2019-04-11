@@ -1,5 +1,38 @@
 (in-package :ui)
 
+(defparameter *attributed-string-attributes* nil)
+
+(defun attribute-to-plist (attr)
+  (let ((type (%attribute-get-type attr)))
+    (list type
+      (case type
+        (:family (%attribute-family attr))
+        (:size (%attribute-size attr))
+        (:weight (%attribute-weight attr))
+        (:italic (%attribute-italic attr))
+        (:stretch (%attribute-stretch attr))
+        ((:color :background)
+          (cffi:with-foreign-objects ((red :double) (green :double) (blue :double) (alpha :double))
+            (%attribute-color attr red green blue alpha)
+            (list :red (cffi:mem-aref red :double)
+                  :green (cffi:mem-aref green :double)
+                  :blue (cffi:mem-aref blue :double)
+                  :alpha (cffi:mem-aref alpha :double))))
+        (:underline (%attribute-underline attr))
+        (:underline-color
+          (cffi:with-foreign-objects ((underline '%underline-color) (red :double) (green :double) (blue :double) (alpha :double))
+            (%attribute-underline-color attr underline red green blue alpha)
+            (list :underline (cffi:mem-aref underline '%underline-color)
+                  :red (cffi:mem-aref red :double)
+                  :green (cffi:mem-aref green :double)
+                  :blue (cffi:mem-aref blue :double)
+                  :alpha (cffi:mem-aref alpha :double))))))))
+
+(cffi:defcallback attributed-string-for-each-attribute %for-each ((string :pointer) (attr :pointer) (start size-t) (end size-t) (data :pointer))
+  (setq *attributed-string-attributes*
+    (append *attributed-string-attributes* (list (append (attribute-to-plist attr) (list :start start :end end)))))
+  :continue)
+
 (defun plist-to-open-type-features (plist)
   (iter
     (with features = (%new-open-type-features))
@@ -11,7 +44,7 @@
                                       (char-code (char name 3))
                                       v)
     (finally
-      (return features))))
+      (return (%new-features-attribute features)))))
 
 (defun plist-to-attributes (plist)
   (iter
@@ -87,3 +120,8 @@
       (iter
         (for span in text)
         (apply #'append-text instance span)))))
+
+(defun get-attributes (instance)
+  (let ((*attributed-string-attributes* nil))
+    (%attributed-string-for-each-attribute instance (cffi:callback attributed-string-for-each-attribute) (cffi:null-pointer))
+    *attributed-string-attributes*))

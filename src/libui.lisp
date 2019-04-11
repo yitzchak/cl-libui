@@ -21,10 +21,6 @@
 (cffi:define-parse-method draw-context-type ()
   (make-instance 'draw-context-type))
 
-(cffi:defcenum (%for-each :unsigned-int)
-	:continue
-	:stop)
-
 (cffi:defcstruct %init-options
 	(size size-t))
 
@@ -788,18 +784,6 @@
 
 (cffi:defcfun ("uiFreeAttribute" %free-attribute) :void
   (a :pointer))
-
-(cffi:defcenum (%attribute-type :unsigned-int)
-	:family
-	:size
-	:weight
-	:italic
-	:stretch
-	:color
-	:background
-	:underline
-	:underline-color
-	:features)
 
 (cffi:defcfun ("uiAttributeGetType" %attribute-get-type) %attribute-type
   (a :pointer))
