@@ -546,16 +546,6 @@
 	(:drag-broken :pointer)
 	(:key-event :pointer))
 
-(cffi:defcenum (%window-resize-edge :unsigned-int)
-	:left
-	:top
-	:right
-	:bottom
-	:top-left
-	:top-right
-	:bottom-left
-	:bottom-right)
-
 (cffi:defcfun ("uiAreaSetSize" %area-set-size) :void
   (a ui-type)
   (width :int)
@@ -594,26 +584,6 @@
 	(:clip-y :double)
 	(:clip-width :double)
 	(:clip-height :double))
-
-(cffi:defcenum (%draw-brush-type :unsigned-int)
-	:solid
-	:linear-gradient
-	:radial-gradient
-	:image)
-
-(cffi:defcenum (%draw-line-cap :unsigned-int)
-	:flat
-	:round
-	:square)
-
-(cffi:defcenum (%draw-line-join :unsigned-int)
-	:miter
-	:round
-	:bevel)
-
-(cffi:defcenum (%draw-fill-mode :unsigned-int)
-	:winding
-	:alternate)
 
 (cffi:defcstruct %draw-matrix
 	(:m11 :double)
@@ -800,48 +770,17 @@
 (cffi:defcfun ("uiAttributeSize" %attribute-size) :double
   (a :pointer))
 
-(cffi:defcenum (%text-weight :unsigned-int)
-	(:minimum 0)
-	(:thin 100)
-	(:ultra-light 200)
-	(:light 300)
-	(:book 350)
-	(:normal 400)
-	(:medium 500)
-	(:semi-bold 600)
-	(:bold 700)
-	(:ultra-bold 800)
-	(:heavy 900)
-	(:ultra-heavy 950)
-	(:maximum 1000))
-
 (cffi:defcfun ("uiNewWeightAttribute" %new-weight-attribute) :pointer
   (weight %text-weight))
 
 (cffi:defcfun ("uiAttributeWeight" %attribute-weight) %text-weight
   (a :pointer))
 
-(cffi:defcenum (%text-italic :unsigned-int)
-	:normal
-	:oblique
-	:italic)
-
 (cffi:defcfun ("uiNewItalicAttribute" %new-italic-attribute) :pointer
   (italic %text-italic))
 
 (cffi:defcfun ("uiAttributeItalic" %attribute-italic) %text-italic
   (a :pointer))
-
-(cffi:defcenum (%text-stretch :unsigned-int)
-	:ultra-condensed
-	:extra-condensed
-	:condensed
-	:semi-condensed
-	:normal
-	:semi-expanded
-	:expanded
-	:extra-expanded
-	:ultra-expanded)
 
 (cffi:defcfun ("uiNewStretchAttribute" %new-stretch-attribute) :pointer
   (stretch %text-stretch))
@@ -868,23 +807,11 @@
   (b :double)
   (a :double))
 
-(cffi:defcenum (%underline :unsigned-int)
-	:none
-	:single
-	:double
-	:suggestion)
-
 (cffi:defcfun ("uiNewUnderlineAttribute" %new-underline-attribute) :pointer
   (u %underline))
 
 (cffi:defcfun ("uiAttributeUnderline" %attribute-underline) :unsigned-int
   (a :pointer))
-
-(cffi:defcenum (%underline-color :unsigned-int)
-	:custom
-	:spelling
-	:grammar
-	:auxiliary)
 
 (cffi:defcfun ("uiNewUnderlineColorAttribute" %new-underline-color-attribute) :pointer
   (u %underline-color)
@@ -998,11 +925,6 @@
 	(:italic %text-italic)
 	(:stretch %text-stretch))
 
-(cffi:defcenum (%draw-text-align :unsigned-int)
-	:left
-	:center
-	:right)
-
 (cffi:defcstruct %draw-text-layout-params
 	(string ui-type)
 	(default-font (:pointer (:struct %font-descriptor)))
@@ -1057,48 +979,6 @@
 	(:modifiers %modifiers)
 	(:held1to64 :uint64))
 
-(cffi:defcenum (%ext-key :unsigned-int)
-  :none
-	:escape
-	:insert
-	:delete
-	:home
-	:end
-	:page-up
-	:page-down
-	:up
-	:down
-	:left
-	:right
-	:f1
-	:f2
-	:f3
-	:f4
-	:f5
-	:f6
-	:f7
-	:f8
-	:f9
-	:f10
-	:f11
-	:f12
-	:n0
-	:n1
-	:n2
-	:n3
-	:n4
-	:n5
-	:n6
-	:n7
-	:n8
-	:n9
-	:n-dot
-	:n-enter
-	:n-add
-	:n-subtract
-	:n-multiply
-	:n-divide)
-
 (cffi:defcstruct %area-key-event
 	(:key :char)
 	(:ext-key %ext-key)
@@ -1145,18 +1025,6 @@
   (padded (:boolean :int)))
 
 (cffi:defcfun ("uiNewForm" %new-form) :pointer)
-
-(cffi:defcenum (%align :unsigned-int)
-	:fill
-	:start
-	:center
-	:end)
-
-(cffi:defcenum (%at :unsigned-int)
-	:leading
-	:top
-	:trailing
-	:bottom)
 
 (cffi:defcfun ("uiGridAppend" %grid-append) :void
   (g ui-type)
@@ -1207,12 +1075,6 @@
 
 (cffi:defcfun ("uiFreeTableValue" %free-table-value) :void
   (v :pointer))
-
-(cffi:defcenum (%table-value-type :unsigned-int)
-	:string
-	:image
-	:int
-	:color)
 
 (cffi:defcfun ("uiTableValueGetType" %table-value-get-type) :unsigned-int
   (v :pointer))
