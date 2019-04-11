@@ -1,6 +1,16 @@
 (in-package :ui)
 
 (defparameter *attributed-string-attributes* nil)
+(defparameter *open-type-features* nil)
+
+(cffi:defcallback open-type-features-for-each-callback %for-each ((otf :pointer) (a :char) (b :char) (c :char) (d :char) (value :uint32) (data :pointer))
+  (declare (ignore otf data))
+  (setq *open-type-features*
+    (append *open-type-features*
+      (list
+        (intern (string-upcase (coerce (mapcar #'code-char (list a b c d)) 'string)) 'keyword)
+        value)))
+  :continue)
 
 (defun attribute-to-plist (attr)
   (let ((type (%attribute-get-type attr)))
@@ -26,9 +36,15 @@
                   :red (cffi:mem-aref red :double)
                   :green (cffi:mem-aref green :double)
                   :blue (cffi:mem-aref blue :double)
-                  :alpha (cffi:mem-aref alpha :double))))))))
+                  :alpha (cffi:mem-aref alpha :double))))
+        (:features
+          (%open-type-features-for-each (%attribute-features attr)
+            (cffi:callback open-type-features-for-each-callback)
+            (cffi:null-pointer))
+          *open-type-features*)))))
 
-(cffi:defcallback attributed-string-for-each-attribute %for-each ((string :pointer) (attr :pointer) (start size-t) (end size-t) (data :pointer))
+(cffi:defcallback attributed-string-for-each-callback %for-each ((string :pointer) (attr :pointer) (start size-t) (end size-t) (data :pointer))
+  (declare (ignore string data))
   (setq *attributed-string-attributes*
     (append *attributed-string-attributes* (list (append (attribute-to-plist attr) (list :start start :end end)))))
   :continue)
@@ -121,7 +137,7 @@
         (for span in text)
         (apply #'append-text instance span)))))
 
-(defun get-attributes (instance)
+(defun attributes (instance)
   (let ((*attributed-string-attributes* nil))
-    (%attributed-string-for-each-attribute instance (cffi:callback attributed-string-for-each-attribute) (cffi:null-pointer))
+    (%attributed-string-for-each-attribute instance (cffi:callback attributed-string-for-each-callback) (cffi:null-pointer))
     *attributed-string-attributes*))

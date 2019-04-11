@@ -7,6 +7,7 @@
     #:append-text
     #:area
     #:attributed-string
+    #:attributes
     #:button
     #:checkbox
     #:checked
