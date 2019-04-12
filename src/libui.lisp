@@ -9,17 +9,23 @@
 
 (cffi:define-foreign-type ui-type ()
   ()
-  (:actual-type :pointer))
-
-(cffi:define-parse-method ui-type ()
-  (make-instance 'ui-type))
+  (:actual-type :pointer)
+  (:simple-parser ui-type))
 
 (cffi:define-foreign-type draw-context-type ()
   ()
-  (:actual-type :pointer))
+  (:actual-type :pointer)
+  (:simple-parser draw-context-type))
 
-(cffi:define-parse-method draw-context-type ()
-  (make-instance 'draw-context-type))
+(cffi:define-foreign-type brush-type ()
+  ()
+  (:actual-type :pointer)
+  (:simple-parser brush-type))
+
+(cffi:define-foreign-type stroke-params-type ()
+  ()
+  (:actual-type :pointer)
+  (:simple-parser stroke-params-type))
 
 (cffi:defcstruct %init-options
 	(size size-t))
@@ -600,7 +606,7 @@
 	(:blue :double)
 	(:alpha :double))
 
-(cffi:defcstruct (%draw-brush :class draw-brush-type)
+(cffi:defcstruct (%draw-brush :class type-draw-brush)
 	(:type %draw-brush-type)
 	(:red :double)
 	(:green :double)
@@ -614,14 +620,14 @@
 	(:stops (:pointer (:struct %draw-brush-gradient-stop)))
 	(:num-stops size-t))
 
-(cffi:defcstruct %draw-stroke-params
-	(cap %draw-line-cap)
-	(join %draw-line-join)
-	(thickness :double)
-	(miter-limit :double)
-	(dashes (:pointer :double))
-	(num-dashes size-t)
-	(dash-phase :double))
+(cffi:defcstruct (%draw-stroke-params :class draw-stroke-params-type)
+	(:cap %draw-line-cap)
+	(:join %draw-line-join)
+	(:thickness :double)
+	(:miter-limit :double)
+	(:dashes (:pointer :double))
+	(:num-dashes size-t)
+	(:dash-phase :double))
 
 (cffi:defcfun ("uiDrawNewPath" %draw-new-path) :pointer
   (fill-mode %draw-fill-mode))
@@ -688,7 +694,7 @@
 (cffi:defcfun ("uiDrawFill" %draw-fill) :void
   (c draw-context-type)
   (path ui-type)
-  (b (:pointer (:struct %draw-brush))))
+  (b brush-type))
 
 (cffi:defcfun ("uiDrawMatrixSetIdentity" %draw-matrix-set-identity) :void
   (m ui-type))

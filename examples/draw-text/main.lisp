@@ -26,7 +26,7 @@
           (p (make-instance 'ui:path :fill-mode :winding)))
       (ui:add-rectangle p 0d0 0d0 (getf params :area-width) (getf params :area-height))
       (ui::%draw-path-end p)
-      (ui::draw-fill (getf params :context) p '(:type :solid :red 1.0d0 :green 1.0d0 :blue 1.0d0 :alpha 1.0d0))
+      (ui::%draw-fill (getf params :context) p '(:type :solid :red 1.0d0 :green 1.0d0 :blue 1.0d0 :alpha 1.0d0))
       (ui::%draw-text (getf params :context) tl +margin+ +margin+))))
 
 (defmethod ui:on-changed (object)
