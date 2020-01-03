@@ -1,6 +1,6 @@
 (in-package #:ui)
 
-(defclass base-entry (control)
+(defclass base-entry (control on-changed-slot)
   ((text
      :accessor text
      :initarg :text
@@ -40,20 +40,26 @@
     (call-next-method)))
 
 (defmethod initialize-instance :before ((instance entry) &rest initargs &key &allow-other-keys)
-(declare (ignore initargs))
+  (declare (ignore initargs))
   (setf (handle instance)
-        (%new-entry))
-  (%entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-entry)))
+
+(defmethod initialize-instance :after ((instance entry) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%entry-on-changed instance (cffi:callback on-changed-callback) instance))
 
 (defclass password-entry (base-entry)
   ()
   (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance password-entry) &rest initargs &key &allow-other-keys)
-(declare (ignore initargs))
+  (declare (ignore initargs))
   (setf (handle instance)
-        (%new-password-entry))
-  (%entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-password-entry)))
+
+(defmethod initialize-instance :after ((instance password-entry) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%entry-on-changed instance (cffi:callback on-changed-callback) instance))
 
 (defclass search-entry (base-entry)
   ()
@@ -62,8 +68,11 @@
 (defmethod initialize-instance :before ((instance search-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
   (setf (handle instance)
-        (%new-search-entry))
-  (%entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-search-entry)))
+
+(defmethod initialize-instance :after ((instance search-entry) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%entry-on-changed instance (cffi:callback on-changed-callback) instance))
 
 (defclass multiline-base-entry (base-entry)
   ()
@@ -76,8 +85,11 @@
 (defmethod initialize-instance :before ((instance multiline-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
   (setf (handle instance)
-        (%new-multiline-entry))
-  (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-multiline-entry)))
+
+(defmethod initialize-instance :after ((instance multiline-entry) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) instance))
 
 (defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object multiline-base-entry) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
@@ -108,8 +120,11 @@
 (defmethod initialize-instance :before ((instance non-wrapping-multiline-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
   (setf (handle instance)
-        (%new-non-wrapping-multiline-entry))
-  (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-non-wrapping-multiline-entry)))
+
+(defmethod initialize-instance :after ((instance multiline-entry) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) instance))
 
 (defmethod append-text ((object multiline-base-entry) text &rest options &key &allow-other-keys)
   (declare (ignore options))

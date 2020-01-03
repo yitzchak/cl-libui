@@ -270,7 +270,7 @@
 (cffi:defcfun ("uiEntryOnChanged" %entry-on-changed) :void
   (e control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiEntryReadOnly" %entry-read-only) (:boolean :int)
   (e control-pointer))
@@ -404,7 +404,7 @@
 (cffi:defcfun ("uiComboboxOnSelected" %combobox-on-selected) :void
   (c control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiNewCombobox" %new-combobox) :pointer)
 
@@ -422,7 +422,7 @@
 (cffi:defcfun ("uiEditableComboboxOnChanged" %editable-combobox-on-changed) :void
   (c control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiNewEditableCombobox" %new-editable-combobox) :pointer)
 
@@ -440,7 +440,7 @@
 (cffi:defcfun ("uiRadioButtonsOnSelected" %radio-buttons-on-selected) :void
   (r control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiNewRadioButtons" %new-radio-buttons) :pointer)
 
@@ -466,7 +466,7 @@
 (cffi:defcfun ("uiDateTimePickerOnChanged" %date-time-picker-on-changed) :void
   (d control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiNewDateTimePicker" %new-date-time-picker) :pointer)
 
@@ -488,7 +488,7 @@
 (cffi:defcfun ("uiMultilineEntryOnChanged" %multiline-entry-on-changed) :void
   (e control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiMultilineEntryReadOnly" %multiline-entry-read-only) (:boolean :int)
   (e control-pointer))
@@ -510,7 +510,7 @@
 (cffi:defcfun ("uiMenuItemOnClicked" %menu-item-on-clicked) :void
   (m control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiMenuItemChecked" %menu-item-checked) (:boolean :int)
   (m control-pointer))
@@ -974,7 +974,7 @@
 (cffi:defcfun ("uiFontButtonOnChanged" %font-button-on-changed) :void
   (b control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiNewFontButton" %new-font-button) :pointer)
 
@@ -1022,7 +1022,7 @@
 (cffi:defcfun ("uiColorButtonOnChanged" %color-button-on-changed) :void
   (button control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiNewColorButton" %new-color-button) :pointer)
 

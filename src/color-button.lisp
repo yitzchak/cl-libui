@@ -1,6 +1,6 @@
 (in-package #:ui)
 
-(defclass color-button (control)
+(defclass color-button (control on-changed-slot)
   ((color
      :accessor color
      :initarg :color
@@ -34,7 +34,10 @@
     (call-next-method)))
 
 (defmethod initialize-instance :before ((instance color-button) &rest initargs &key &allow-other-keys)
-(declare (ignore initargs))
+  (declare (ignore initargs))
   (setf (handle instance)
-        (%new-color-button))
-  (%color-button-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-color-button)))
+
+(defmethod initialize-instance :after ((instance color-button) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%color-button-on-changed instance (cffi:callback on-changed-callback) instance))

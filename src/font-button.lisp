@@ -1,6 +1,6 @@
 (in-package #:ui)
 
-(defclass font-button (control)
+(defclass font-button (control on-changed-slot)
   ((font
      :accessor font
      :initarg :font
@@ -28,7 +28,10 @@
     (call-next-method)))
 
 (defmethod initialize-instance :before ((instance font-button) &rest initargs &key &allow-other-keys)
-(declare (ignore initargs))
+  (declare (ignore initargs))
   (setf (handle instance)
-        (%new-font-button))
-  (%font-button-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-font-button)))
+
+(defmethod initialize-instance :after ((instance font-button) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%font-button-on-changed instance (cffi:callback on-changed-callback) instance))

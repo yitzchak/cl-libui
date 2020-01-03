@@ -1,6 +1,6 @@
 (in-package #:ui)
 
-(defclass base-date-time-picker (control)
+(defclass base-date-time-picker (control on-changed-slot)
   ((value
      :accessor value
      :initarg :value
@@ -47,20 +47,26 @@
   (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance date-time-picker) &rest initargs &key &allow-other-keys)
-(declare (ignore initargs))
+  (declare (ignore initargs))
   (setf (handle instance)
-        (%new-date-time-picker))
-  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-date-time-picker)))
+
+(defmethod initialize-instance :after ((instance date-time-picker) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) instance))
 
 (defclass date-picker (base-date-time-picker)
   ()
   (:metaclass ui-metaclass))
 
 (defmethod initialize-instance :before ((instance date-picker) &rest initargs &key &allow-other-keys)
-(declare (ignore initargs))
+  (declare (ignore initargs))
   (setf (handle instance)
-        (%new-date-picker))
-  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-date-picker)))
+
+(defmethod initialize-instance :after ((instance date-picker) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) instance))
 
 (defclass time-picker (base-date-time-picker)
   ()
@@ -69,5 +75,8 @@
 (defmethod initialize-instance :before ((instance time-picker) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
   (setf (handle instance)
-        (%new-time-picker))
-  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-time-picker)))
+
+(defmethod initialize-instance :after ((instance time-picker) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) instance))

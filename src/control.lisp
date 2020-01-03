@@ -62,12 +62,6 @@
         (call-next-method)))
     (call-next-method)))
 
-(defgeneric on-changed (control)
-  (:documentation "Called on change signal."))
-
-(defmethod on-changed (control)
-  (declare (ignore control)))
-
 (defgeneric append-child (object child &rest options &key &allow-other-keys))
 
 (defgeneric insert-child (object child &rest options &key &allow-other-keys))
@@ -107,6 +101,22 @@
 (cffi:defcallback on-clicked-callback (:boolean :int) ((pointer :pointer) (instance control-id))
   (declare (ignore pointer))
   (call-on-clicked instance))
+
+(defclass on-selected-slot ()
+  ((on-selected
+     :accessor on-selected
+     :initarg :on-selectedselected
+     :initform nil)))
+
+(defun call-on-selected (instance &rest args)
+  (when instance
+    (with-slots (on-selected) instance
+      (when on-selected
+        (apply on-selected instance args)))))
+
+(cffi:defcallback on-selected-callback :void ((pointer :pointer) (instance control-id))
+  (declare (ignore pointer))
+  (call-on-selected instance))
 
 
 
