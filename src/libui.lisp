@@ -12,10 +12,10 @@
   (:actual-type :pointer)
   (:simple-parser control-pointer))
 
-(cffi:define-foreign-type button-pointer ()
+(cffi:define-foreign-type control-id ()
   ()
   (:actual-type :pointer)
-  (:simple-parser button-pointer))
+  (:simple-parser control-id))
 
 (cffi:define-foreign-type draw-context-type ()
   ()
@@ -213,7 +213,7 @@
 (cffi:defcfun ("uiButtonOnClicked" %button-on-clicked) :void
   (b control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiNewButton" %new-button) :pointer
   (text :string))
@@ -355,7 +355,7 @@
 (cffi:defcfun ("uiSpinboxOnChanged" %spinbox-on-changed) :void
   (s control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiNewSpinbox" %new-spinbox) :pointer
   (min :int)
@@ -371,7 +371,7 @@
 (cffi:defcfun ("uiSliderOnChanged" %slider-on-changed) :void
   (s control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiNewSlider" %new-slider) :pointer
   (min :int)

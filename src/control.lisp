@@ -4,6 +4,8 @@
   ((handle
      :accessor handle
      :initarg :handle)
+   (id
+     :accessor id)
    (enabled
      :accessor enabled
      :initarg :enabled
@@ -14,13 +16,25 @@
      :allocation :ui-instance))
   (:metaclass ui-metaclass))
 
-(defmethod cffi:translate-to-foreign (object (type control-pointer))
-  (declare (ignore type))
-  (handle object))
+(defparameter *controls* (make-hash-table))
 
-(defmethod cffi:translate-from-foreign (handle (type control-pointer))
+(defmethod initialize-instance :before ((instance control) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (with-slots (id) instance
+    (setf id (hash-table-count *controls*))
+    (setf (gethash id *controls*) instance)))
+
+(defmethod cffi:translate-to-foreign (value (type control-pointer))
   (declare (ignore type))
-  (make-instance 'control :handle handle))
+  (handle value))
+
+(defmethod cffi:translate-to-foreign (value (type control-id))
+  (declare (ignore type))
+  (cffi:make-pointer (id value)))
+
+(defmethod cffi:translate-from-foreign (value (type control-id))
+  (declare (ignore type))
+  (gethash (cffi:pointer-address value) *controls*))
 
 (defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object control) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
@@ -54,10 +68,6 @@
 (defmethod on-changed (control)
   (declare (ignore control)))
 
-(cffi:defcallback on-changed-callback :void ((control control-pointer) (data :pointer))
-  (declare (ignore data))
-  (on-changed control))
-
 (defgeneric append-child (object child &rest options &key &allow-other-keys))
 
 (defgeneric insert-child (object child &rest options &key &allow-other-keys))
@@ -65,3 +75,38 @@
 (defgeneric append-text (object item &rest options &key &allow-other-keys))
 
 (defgeneric append-item (object item &rest options &key &allow-other-keys))
+
+(defclass on-changed-slot ()
+  ((on-changed
+     :accessor on-changed
+     :initarg :on-changed
+     :initform nil)))
+
+(defun call-on-changed (instance &rest args)
+  (when instance
+    (with-slots (on-changed) instance
+      (when on-changed
+        (apply on-changed instance args)))))
+
+(cffi:defcallback on-changed-callback :void ((pointer :pointer) (instance control-id))
+  (declare (ignore pointer))
+  (call-on-changed instance))
+
+(defclass on-clicked-slot ()
+  ((on-clicked
+     :accessor on-clicked
+     :initarg :on-clicked
+     :initform nil)))
+
+(defun call-on-clicked (instance &rest args)
+  (when instance
+    (with-slots (on-clicked) instance
+      (when on-clicked
+        (apply on-clicked instance args)))))
+
+(cffi:defcallback on-clicked-callback (:boolean :int) ((pointer :pointer) (instance control-id))
+  (declare (ignore pointer))
+  (call-on-clicked instance))
+
+
+

@@ -4,11 +4,10 @@
   ((value
      :accessor value
      :initarg :value
-     :initform 0
      :allocation :ui-instance))
   (:metaclass ui-metaclass))
 
-(defclass spinbox (range-control)
+(defclass spinbox (range-control on-changed-slot)
   ()
   (:metaclass ui-metaclass))
 
@@ -32,10 +31,13 @@
 
 (defmethod initialize-instance :before ((instance spinbox) &rest initargs &key &allow-other-keys)
   (setf (handle instance)
-        (%new-spinbox (getf initargs :min) (getf initargs :max)))
-  (%spinbox-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-spinbox (getf initargs :min) (getf initargs :max))))
 
-(defclass slider (range-control)
+(defmethod initialize-instance :after ((instance spinbox) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%spinbox-on-changed instance (cffi:callback on-changed-callback) instance))
+
+(defclass slider (range-control on-changed-slot)
   ()
   (:metaclass ui-metaclass))
 
@@ -59,8 +61,11 @@
 
 (defmethod initialize-instance :before ((instance slider) &rest initargs &key &allow-other-keys)
   (setf (handle instance)
-        (%new-slider (getf initargs :min) (getf initargs :max)))
-  (%slider-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
+        (%new-slider (getf initargs :min) (getf initargs :max))))
+
+(defmethod initialize-instance :after ((instance slider) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%slider-on-changed instance (cffi:callback on-changed-callback) instance))
 
 (defclass progress-bar (range-control)
   ()
