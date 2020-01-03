@@ -7,7 +7,7 @@
   (declare (ignore control))
   t)
 
-(cffi:defcallback on-closing-callback (:boolean :int) ((control ui-type) (data :pointer))
+(cffi:defcallback on-closing-callback (:boolean :int) ((control control-pointer) (data :pointer))
   (declare (ignore data))
   (on-closing control))
 

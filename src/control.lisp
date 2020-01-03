@@ -2,33 +2,25 @@
 
 (defclass control ()
   ((handle
-     :accessor handle)
+     :accessor handle
+     :initarg :handle)
    (enabled
      :accessor enabled
      :initarg :enabled
-     :initform t
      :allocation :ui-instance)
    (visible
      :accessor visible
      :initarg :visible
-     :initform nil
      :allocation :ui-instance))
   (:metaclass ui-metaclass))
 
-(defparameter *controls* (trivial-garbage:make-weak-hash-table :weakness :value))
-
-(defmethod initialize-instance :after ((instance control) &rest initargs &key &allow-other-keys)
-  (declare (ignore initargs))
-  (let ((handle (handle instance)))
-    (setf (gethash handle *controls*) instance)))
-
-(defmethod cffi:translate-to-foreign (object (type ui-type))
+(defmethod cffi:translate-to-foreign (object (type control-pointer))
   (declare (ignore type))
   (handle object))
 
-(defmethod cffi:translate-from-foreign (handle (type ui-type))
+(defmethod cffi:translate-from-foreign (handle (type control-pointer))
   (declare (ignore type))
-  (gethash handle *controls*))
+  (make-instance 'control :handle handle))
 
 (defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object control) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
@@ -62,7 +54,7 @@
 (defmethod on-changed (control)
   (declare (ignore control)))
 
-(cffi:defcallback on-changed-callback :void ((control ui-type) (data :pointer))
+(cffi:defcallback on-changed-callback :void ((control control-pointer) (data :pointer))
   (declare (ignore data))
   (on-changed control))
 

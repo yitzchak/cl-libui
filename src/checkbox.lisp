@@ -6,7 +6,7 @@
 (defmethod on-toggled (control)
   (declare (ignore control)))
 
-(cffi:defcallback on-toggled-callback (:boolean :int) ((control ui-type) (data :pointer))
+(cffi:defcallback on-toggled-callback (:boolean :int) ((control control-pointer) (data :pointer))
   (declare (ignore data))
   (on-toggled control))
 

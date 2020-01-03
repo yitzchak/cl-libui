@@ -26,20 +26,36 @@
     ((typep control 'ui:color-button)
       (format t "~S~%" (ui:color control)))))
 
-(defmethod ui:on-clicked (control)
-  (cond
-    ((eql control *open-button*)
-      (setf (ui:text *open-entry*)
-            (or (ui:open-file control) "(cancelled)")))
-    ((eql control *save-button*)
-      (setf (ui:text *save-entry*)
-            (or (ui:save-file control) "(cancelled)")))
-    ((eql control *msg-button*)
-      (ui:message-box *window* "This is a normal message box."
-		                           "More detailed information can be shown here."))
-    ((eql control *err-button*)
-      (ui:error-box *window* "This message box describes an error."
-		                         "More detailed information can be shown here."))))
+(defun on-open-clicked (instance)
+  (setf (ui:text *open-entry*)
+        (or (ui:open-file *window*) "(cancelled)")))
+
+(defun on-save-clicked (instance)
+  (setf (ui:text *save-entry*)
+        (or (ui:save-file *window*) "(cancelled)")))
+
+(defun on-msg-clicked (instance)
+  (ui:message-box *window* "This is a normal message box."
+                           "More detailed information can be shown here."))
+
+(defun on-err-clicked (instance)
+  (ui:message-box *window* "This message box describes an error."
+                           "More detailed information can be shown here."))
+
+;(defmethod ui:on-clicked (control)
+;  (cond
+;    ((eql control *open-button*)
+;      (setf (ui:text *open-entry*)
+;            (or (ui:open-file control) "(cancelled)")))
+;    ((eql control *save-button*)
+;      (setf (ui:text *save-entry*)
+;            (or (ui:save-file control) "(cancelled)")))
+;    ((eql control *msg-button*)
+;      (ui:message-box *window* "This is a normal message box."
+;		                           "More detailed information can be shown here."))
+;    ((eql control *err-button*)
+;      (ui:error-box *window* "This message box describes an error."
+;		                         "More detailed information can be shown here."))))
 
 (defun make-basic-controls-page ()
   (let ((vbox (make-instance 'ui:vertical-box :padded t))
@@ -103,16 +119,20 @@
       (ui:append-child hbox vbox :stretch t)
       (ui:append-child vbox g)
       (setq *open-button* (make-instance 'ui:button :text "Open File"))
+      (setf (ui:on-clicked *open-button*) #'on-open-clicked)
       (ui:append-child g *open-button* :left 0 :top 0 :xspan 1 :yspan 1 :halign :fill :valign :fill)
       (setq *open-entry* (make-instance 'ui:entry :read-only t))
       (ui:append-child g *open-entry* :left 1 :top 0 :xspan 1 :yspan 1 :hexpand t :halign :fill :valign :fill)
       (setq *save-button* (make-instance 'ui:button :text "Save File"))
+      (setf (ui:on-clicked *save-button*) #'on-save-clicked)
       (ui:append-child g *save-button* :left 0 :top 1 :xspan 1 :yspan 1 :halign :fill :valign :fill)
       (setq *save-entry* (make-instance 'ui:entry :read-only t))
       (ui:append-child g *save-entry* :left 1 :top 1 :xspan 1 :yspan 1 :hexpand t :halign :fill :valign :fill)
       (setq *msg-button* (make-instance 'ui:button :text "Message Box"))
+      (setf (ui:on-clicked *msg-button*) #'on-msg-clicked)
       (ui:append-child g *msg-button* :left 0 :top 2 :xspan 1 :yspan 1 :halign :fill :valign :fill)
       (setq *err-button* (make-instance 'ui:button :text "Error Box"))
+      (setf (ui:on-clicked *err-button*) #'on-err-clicked)
       (ui:append-child g *err-button* :left 0 :top 3 :xspan 1 :yspan 1 :halign :fill :valign :fill))
     hbox))
 

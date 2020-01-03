@@ -28,7 +28,7 @@
 (defmethod on-draw (object params)
   (declare (ignore object params)))
 
-(cffi:defcallback area-draw-callback :void ((handler :pointer) (area ui-type) (params (:pointer (:struct %area-draw-params))))
+(cffi:defcallback area-draw-callback :void ((handler :pointer) (area control-pointer) (params (:pointer (:struct %area-draw-params))))
   (declare (ignore handler))
   (on-draw area (cffi:convert-from-foreign params '(:struct %area-draw-params))))
 
@@ -37,7 +37,7 @@
 (defmethod on-mouse (object event)
   (declare (ignore object event)))
 
-(cffi:defcallback area-mouse-callback :void ((handler :pointer) (area ui-type) (event (:pointer (:struct %area-mouse-event))))
+(cffi:defcallback area-mouse-callback :void ((handler :pointer) (area control-pointer) (event (:pointer (:struct %area-mouse-event))))
   (declare (ignore handler))
   (on-mouse area (cffi:convert-from-foreign event '(:struct %area-mouse-event))))
 
@@ -46,7 +46,7 @@
 (defmethod on-mouse-crossed (object left)
   (declare (ignore object left)))
 
-(cffi:defcallback area-mouse-crossed-callback :void ((handler :pointer) (area ui-type) (left (:boolean :int)))
+(cffi:defcallback area-mouse-crossed-callback :void ((handler :pointer) (area control-pointer) (left (:boolean :int)))
   (declare (ignore handler))
   (on-mouse-crossed area left))
 
@@ -55,7 +55,7 @@
 (defmethod on-drag-broken (object)
   (declare (ignore object)))
 
-(cffi:defcallback area-drag-broken-callback :void ((handler :pointer) (area ui-type))
+(cffi:defcallback area-drag-broken-callback :void ((handler :pointer) (area control-pointer))
   (declare (ignore handler))
   (on-drag-broken area))
 
@@ -64,7 +64,7 @@
 (defmethod on-key (object event)
   (declare (ignore object event)))
 
-(cffi:defcallback area-key-callback (:boolean :int) ((handler :pointer) (area ui-type) (event (:pointer (:struct %area-key-event))))
+(cffi:defcallback area-key-callback (:boolean :int) ((handler :pointer) (area control-pointer) (event (:pointer (:struct %area-key-event))))
   (declare (ignore handler))
   (on-key area (cffi:convert-from-foreign event '(:struct %area-key-event))))
 
