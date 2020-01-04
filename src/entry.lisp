@@ -4,12 +4,10 @@
   ((text
      :accessor text
      :initarg :text
-     :initform ""
      :allocation :ui-instance)
    (read-only
      :accessor read-only
      :initarg :read-only
-     :initform nil
      :allocation :ui-instance))
   (:metaclass ui-metaclass))
 

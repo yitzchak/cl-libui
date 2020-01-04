@@ -4,7 +4,6 @@
   ((selected
      :accessor selected
      :initarg :selected
-     :initform nil
      :allocation :ui-instance))
   (:metaclass ui-metaclass))
 

@@ -4,7 +4,6 @@
   ((value
      :accessor value
      :initarg :value
-     :initform ""
      :allocation :ui-instance))
   (:metaclass ui-metaclass))
 

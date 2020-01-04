@@ -3,12 +3,10 @@
 (defclass group (control)
   ((child
      :accessor child
-     :initarg :child
-     :initform nil)
+     :initarg :child)
    (margined
      :accessor margined
      :initarg :margined
-     :initform nil
      :allocation :ui-instance)
    (title
      :accessor title

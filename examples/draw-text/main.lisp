@@ -81,11 +81,11 @@ Use the controls opposite to the text to control properties of the text."))))
                                         :width 640 :height 480
                                         :has-menubar t :visible t :margined t
                                         :on-closing #'on-closing)
-      :font-button (make-instance 'ui:font-button)
+      :font-button (make-instance 'ui:font-button :on-changed #'on-changed)
       :attributed-string (make-attributed-string)
       :area (make-instance 'ui:area :on-draw #'on-draw)
       :align-combobox (make-instance 'ui:combobox :items '("Left" "Center" "Right")
-                                                  :selected 0 :on-changed #'on-changed)))
+                                                  :selected 0 :on-selected #'on-changed)))
   (with-slots (window font-button area align-combobox) *main*
     (let ((hbox (make-instance 'ui:horizontal-box :padded t))
           (vbox (make-instance 'ui:vertical-box :padded t))

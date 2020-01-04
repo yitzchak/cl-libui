@@ -4,12 +4,10 @@
   ((checked
      :accessor checked
      :initarg :checked
-     :initform nil
      :allocation :ui-instance)
    (text
      :accessor text
      :initarg :text
-     :initform ""
      :allocation :ui-instance))
   (:metaclass ui-metaclass))
 

@@ -4,7 +4,6 @@
   ((padded
      :accessor padded
      :initarg :padded
-     :initform nil
      :allocation :ui-instance))
   (:metaclass ui-metaclass))
 

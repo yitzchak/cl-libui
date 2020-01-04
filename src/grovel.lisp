@@ -61,7 +61,7 @@
   ((:normal "uiTextWeightNormal"))
   ((:medium "uiTextWeightMedium"))
   ((:semi-bold "uiTextWeightSemiBold"))
-  ((:bold "uiTextWeightSemiBold"))
+  ((:bold "uiTextWeightBold"))
   ((:ultra-bold "uiTextWeightUltraBold"))
   ((:heavy "uiTextWeightHeavy"))
   ((:ultra-heavy "uiTextWeightUltraHeavy"))
