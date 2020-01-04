@@ -34,4 +34,4 @@
 
 (defmethod initialize-instance :after ((instance font-button) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%font-button-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%font-button-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))

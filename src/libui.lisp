@@ -12,11 +12,6 @@
   (:actual-type :pointer)
   (:simple-parser control-pointer))
 
-(cffi:define-foreign-type control-id ()
-  ()
-  (:actual-type :pointer)
-  (:simple-parser control-id))
-
 (cffi:define-foreign-type draw-context-type ()
   ()
   (:actual-type :pointer)
@@ -172,12 +167,12 @@
 (cffi:defcfun ("uiWindowOnContentSizeChanged" %window-on-content-size-changed) :void
   (w control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiWindowOnClosing" %window-on-closing) :void
   (w control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiWindowBorderless" %window-borderless) (:boolean :int)
   (w control-pointer))
@@ -213,7 +208,7 @@
 (cffi:defcfun ("uiButtonOnClicked" %button-on-clicked) :void
   (b control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiNewButton" %new-button) :pointer
   (text :string))
@@ -248,7 +243,7 @@
 (cffi:defcfun ("uiCheckboxOnToggled" %checkbox-on-toggled) :void
   (c control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiCheckboxChecked" %checkbox-checked) (:boolean :int)
   (c control-pointer))
@@ -270,7 +265,7 @@
 (cffi:defcfun ("uiEntryOnChanged" %entry-on-changed) :void
   (e control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiEntryReadOnly" %entry-read-only) (:boolean :int)
   (e control-pointer))
@@ -355,7 +350,7 @@
 (cffi:defcfun ("uiSpinboxOnChanged" %spinbox-on-changed) :void
   (s control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiNewSpinbox" %new-spinbox) :pointer
   (min :int)
@@ -371,7 +366,7 @@
 (cffi:defcfun ("uiSliderOnChanged" %slider-on-changed) :void
   (s control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiNewSlider" %new-slider) :pointer
   (min :int)
@@ -404,7 +399,7 @@
 (cffi:defcfun ("uiComboboxOnSelected" %combobox-on-selected) :void
   (c control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiNewCombobox" %new-combobox) :pointer)
 
@@ -422,7 +417,7 @@
 (cffi:defcfun ("uiEditableComboboxOnChanged" %editable-combobox-on-changed) :void
   (c control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiNewEditableCombobox" %new-editable-combobox) :pointer)
 
@@ -440,7 +435,7 @@
 (cffi:defcfun ("uiRadioButtonsOnSelected" %radio-buttons-on-selected) :void
   (r control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiNewRadioButtons" %new-radio-buttons) :pointer)
 
@@ -466,7 +461,7 @@
 (cffi:defcfun ("uiDateTimePickerOnChanged" %date-time-picker-on-changed) :void
   (d control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiNewDateTimePicker" %new-date-time-picker) :pointer)
 
@@ -488,7 +483,7 @@
 (cffi:defcfun ("uiMultilineEntryOnChanged" %multiline-entry-on-changed) :void
   (e control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiMultilineEntryReadOnly" %multiline-entry-read-only) (:boolean :int)
   (e control-pointer))
@@ -510,7 +505,7 @@
 (cffi:defcfun ("uiMenuItemOnClicked" %menu-item-on-clicked) :void
   (m control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiMenuItemChecked" %menu-item-checked) (:boolean :int)
   (m control-pointer))
@@ -974,7 +969,7 @@
 (cffi:defcfun ("uiFontButtonOnChanged" %font-button-on-changed) :void
   (b control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiNewFontButton" %new-font-button) :pointer)
 
@@ -1022,7 +1017,7 @@
 (cffi:defcfun ("uiColorButtonOnChanged" %color-button-on-changed) :void
   (button control-pointer)
   (f :pointer)
-  (data control-id))
+  (data :pointer))
 
 (cffi:defcfun ("uiNewColorButton" %new-color-button) :pointer)
 

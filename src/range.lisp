@@ -35,7 +35,7 @@
 
 (defmethod initialize-instance :after ((instance spinbox) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%spinbox-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%spinbox-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defclass slider (range-control on-changed-slot)
   ()
@@ -65,7 +65,7 @@
 
 (defmethod initialize-instance :after ((instance slider) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%slider-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%slider-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defclass progress-bar (range-control)
   ()

@@ -16,7 +16,7 @@
    (attributed-string
      :initarg :attributed-string)))
 
-(defmethod ui:on-draw (object params)
+(defun on-draw (object params)
   (declare (ignore object))
   (with-slots (attributed-string font-button align-combobox) *main*
     (let ((tl (make-instance 'ui:text-layout :string attributed-string
@@ -29,7 +29,7 @@
       (ui::%draw-fill (getf params :context) p '(:type :solid :red 1.0d0 :green 1.0d0 :blue 1.0d0 :alpha 1.0d0))
       (ui::%draw-text (getf params :context) tl +margin+ +margin+))))
 
-(defmethod ui:on-changed (object)
+(defun on-changed (object)
   (declare (ignore object))
   (with-slots (area) *main*
     (ui::%area-queue-redraw-all area)))
@@ -68,17 +68,24 @@ ui:attributed-string lets you have a variety of attributes: ")
             (").
 Use the controls opposite to the text to control properties of the text."))))
 
-(defmethod ui:on-init ()
+(defun on-closing (control)
+  (declare (ignore control))
+  (setq *main* nil)
+  (ui::%quit)
+  t)
+
+(defun on-init ()
   (setq *main*
     (make-instance 'draw-text
       :window (make-instance 'ui:window :title "libui Text-Drawing Example"
                                         :width 640 :height 480
-                                        :has-menubar t :visible t :margined t)
+                                        :has-menubar t :visible t :margined t
+                                        :on-closing #'on-closing)
       :font-button (make-instance 'ui:font-button)
       :attributed-string (make-attributed-string)
-      :area (make-instance 'ui:area)
+      :area (make-instance 'ui:area :on-draw #'on-draw)
       :align-combobox (make-instance 'ui:combobox :items '("Left" "Center" "Right")
-                                                  :selected 0)))
+                                                  :selected 0 :on-changed #'on-changed)))
   (with-slots (window font-button area align-combobox) *main*
     (let ((hbox (make-instance 'ui:horizontal-box :padded t))
           (vbox (make-instance 'ui:vertical-box :padded t))
@@ -90,10 +97,6 @@ Use the controls opposite to the text to control properties of the text."))))
       (ui:append-child form align-combobox :label "Alignment")
       (ui:append-child hbox area :stretch t))))
 
-(defmethod ui:on-closing (control)
-  (declare (ignore control))
-  (setq *main* nil)
-  (ui::%quit)
-  t)
+(setq ui:*on-init* #'on-init)
 
 (ui:main)

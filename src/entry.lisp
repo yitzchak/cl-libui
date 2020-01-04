@@ -46,7 +46,7 @@
 
 (defmethod initialize-instance :after ((instance entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%entry-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defclass password-entry (base-entry)
   ()
@@ -59,7 +59,7 @@
 
 (defmethod initialize-instance :after ((instance password-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%entry-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defclass search-entry (base-entry)
   ()
@@ -72,7 +72,7 @@
 
 (defmethod initialize-instance :after ((instance search-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%entry-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defclass multiline-base-entry (base-entry)
   ()
@@ -89,7 +89,7 @@
 
 (defmethod initialize-instance :after ((instance multiline-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defmethod closer-mop:slot-value-using-class ((class ui-metaclass) (object multiline-base-entry) (slot closer-mop:standard-effective-slot-definition))
   (if (eql :ui-instance (closer-mop:slot-definition-allocation slot))
@@ -124,7 +124,7 @@
 
 (defmethod initialize-instance :after ((instance multiline-entry) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%multiline-entry-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defmethod append-text ((object multiline-base-entry) text &rest options &key &allow-other-keys)
   (declare (ignore options))

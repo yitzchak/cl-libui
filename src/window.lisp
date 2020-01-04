@@ -27,8 +27,8 @@
 
 (defmethod initialize-instance :after ((instance window) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%window-on-content-size-changed instance (cffi:callback on-content-size-changed-callback) instance)
-  (%window-on-closing instance (cffi:callback on-closing-callback) instance))
+  (%window-on-content-size-changed instance (cffi:callback on-content-size-changed-callback) (cffi:null-pointer))
+  (%window-on-closing instance (cffi:callback on-closing-callback) (cffi:null-pointer)))
 
 (defmethod (setf child) :after (new-value (object window))
   (when new-value

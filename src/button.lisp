@@ -31,5 +31,5 @@
 
 (defmethod initialize-instance :after ((instance button) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%button-on-clicked instance (cffi:callback on-clicked-callback) instance))
+  (%button-on-clicked instance (cffi:callback on-clicked-callback) (cffi:null-pointer)))
 

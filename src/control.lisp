@@ -4,8 +4,6 @@
   ((handle
      :accessor handle
      :initarg :handle)
-   (id
-     :accessor id)
    (enabled
      :accessor enabled
      :initarg :enabled
@@ -18,21 +16,15 @@
 
 (defparameter *controls* (make-hash-table))
 
-(defmethod initialize-instance :before ((instance control) &rest initargs &key &allow-other-keys)
+(defmethod initialize-instance :after ((instance control) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (with-slots (id) instance
-    (setf id (hash-table-count *controls*))
-    (setf (gethash id *controls*) instance)))
+  (setf (gethash (cffi:pointer-address (handle instance)) *controls*) instance))
 
 (defmethod cffi:translate-to-foreign (value (type control-pointer))
   (declare (ignore type))
   (handle value))
 
-(defmethod cffi:translate-to-foreign (value (type control-id))
-  (declare (ignore type))
-  (cffi:make-pointer (id value)))
-
-(defmethod cffi:translate-from-foreign (value (type control-id))
+(defmethod cffi:translate-from-foreign (value (type control-pointer))
   (declare (ignore type))
   (gethash (cffi:pointer-address value) *controls*))
 
@@ -82,8 +74,8 @@
       (when on-changed
         (apply on-changed instance args)))))
 
-(cffi:defcallback on-changed-callback :void ((pointer :pointer) (instance control-id))
-  (declare (ignore pointer))
+(cffi:defcallback on-changed-callback :void ((instance control-pointer) (data :pointer))
+  (declare (ignore data))
   (call-on-changed instance))
 
 (defclass on-clicked-slot ()
@@ -98,8 +90,8 @@
       (when on-clicked
         (apply on-clicked instance args)))))
 
-(cffi:defcallback on-clicked-callback (:boolean :int) ((pointer :pointer) (instance control-id))
-  (declare (ignore pointer))
+(cffi:defcallback on-clicked-callback (:boolean :int) ((instance control-pointer) (data :pointer))
+  (declare (ignore data))
   (call-on-clicked instance))
 
 (defclass on-closing-slot ()
@@ -116,8 +108,8 @@
         t))
     t))
 
-(cffi:defcallback on-closing-callback (:boolean :int) ((pointer :pointer) (instance control-id))
-  (declare (ignore pointer))
+(cffi:defcallback on-closing-callback (:boolean :int) ((instance control-pointer) (data :pointer))
+  (declare (ignore data))
   (call-on-closing instance))
 
 (defclass on-content-size-changed-slot ()
@@ -132,9 +124,69 @@
       (when on-content-size-changed
         (apply on-content-size-changed instance args)))))
 
-(cffi:defcallback on-content-size-changed-callback :void ((pointer :pointer) (instance control-id))
-  (declare (ignore pointer))
+(cffi:defcallback on-content-size-changed-callback :void ((instance control-pointer) (data :pointer))
+  (declare (ignore data))
   (call-on-content-size-changed instance))
+
+(defclass on-drag-broken-slot ()
+  ((on-drag-broken
+     :accessor on-drag-broken
+     :initarg :on-drag-broken
+     :initform nil)))
+
+(defun call-on-drag-broken (instance &rest args)
+  (when instance
+    (with-slots (on-drag-broken) instance
+      (when on-drag-broken
+        (apply on-drag-broken instance args)))))
+
+(defclass on-draw-slot ()
+  ((on-draw
+     :accessor on-draw
+     :initarg :on-draw
+     :initform nil)))
+
+(defun call-on-draw (instance &rest args)
+  (when instance
+    (with-slots (on-draw) instance
+      (when on-draw
+        (apply on-draw instance args)))))
+
+(defclass on-key-slot ()
+  ((on-key
+     :accessor on-key
+     :initarg :on-key
+     :initform nil)))
+
+(defun call-on-key (instance &rest args)
+  (when instance
+    (with-slots (on-key) instance
+      (when on-key
+        (apply on-key instance args)))))
+
+(defclass on-mouse-slot ()
+  ((on-mouse
+     :accessor on-mouse
+     :initarg :on-mouse
+     :initform nil)))
+
+(defun call-on-mouse (instance &rest args)
+  (when instance
+    (with-slots (on-mouse) instance
+      (when on-mouse
+        (apply on-mouse instance args)))))
+
+(defclass on-mouse-crossed-slot ()
+  ((on-mouse-crossed
+     :accessor on-mouse-crossed
+     :initarg :on-mouse-crossed
+     :initform nil)))
+
+(defun call-on-mouse-crossed (instance &rest args)
+  (when instance
+    (with-slots (on-mouse-crossed) instance
+      (when on-mouse-crossed
+        (apply on-mouse-crossed instance args)))))
 
 (defclass on-selected-slot ()
   ((on-selected
@@ -148,8 +200,8 @@
       (when on-selected
         (apply on-selected instance args)))))
 
-(cffi:defcallback on-selected-callback :void ((pointer :pointer) (instance control-id))
-  (declare (ignore pointer))
+(cffi:defcallback on-selected-callback :void ((instance control-pointer) (data :pointer))
+  (declare (ignore data))
   (call-on-selected instance))
 
 (defclass on-toggled-slot ()
@@ -164,8 +216,8 @@
       (when on-toggled
         (apply on-toggled instance args)))))
 
-(cffi:defcallback on-toggled-callback :void ((pointer :pointer) (instance control-id))
-  (declare (ignore pointer))
+(cffi:defcallback on-toggled-callback :void ((instance control-pointer) (data :pointer))
+  (declare (ignore data))
   (call-on-toggled instance))
 
 

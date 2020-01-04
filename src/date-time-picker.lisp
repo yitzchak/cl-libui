@@ -53,7 +53,7 @@
 
 (defmethod initialize-instance :after ((instance date-time-picker) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defclass date-picker (base-date-time-picker)
   ()
@@ -66,7 +66,7 @@
 
 (defmethod initialize-instance :after ((instance date-picker) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defclass time-picker (base-date-time-picker)
   ()
@@ -79,4 +79,4 @@
 
 (defmethod initialize-instance :after ((instance time-picker) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%date-time-picker-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))

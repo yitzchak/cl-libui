@@ -41,4 +41,4 @@
 
 (defmethod initialize-instance :after ((instance checkbox) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%checkbox-on-toggled instance (cffi:callback on-toggled-callback) instance))
+  (%checkbox-on-toggled instance (cffi:callback on-toggled-callback) (cffi:null-pointer)))

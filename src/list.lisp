@@ -34,7 +34,7 @@
 
 (defmethod initialize-instance :after ((instance combobox) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%combobox-on-selected instance (cffi:callback on-selected-callback) instance))
+  (%combobox-on-selected instance (cffi:callback on-selected-callback) (cffi:null-pointer)))
 
 (defmethod append-item ((object combobox) item &rest options &key &allow-other-keys)
   (declare (ignore options))
@@ -74,7 +74,7 @@
 
 (defmethod initialize-instance :after ((instance radio-buttons) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%radio-buttons-on-selected instance (cffi:callback on-selected-callback) instance))
+  (%radio-buttons-on-selected instance (cffi:callback on-selected-callback) (cffi:null-pointer)))
 
 (defmethod append-item ((object radio-buttons) item &rest options &key &allow-other-keys)
   (declare (ignore options))
@@ -114,7 +114,7 @@
 
 (defmethod initialize-instance :after ((instance editable-combobox) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%editable-combobox-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%editable-combobox-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
 
 (defmethod append-item ((object editable-combobox) item &rest options &key &allow-other-keys)
   (declare (ignore options))

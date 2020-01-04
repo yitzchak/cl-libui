@@ -40,4 +40,4 @@
 
 (defmethod initialize-instance :after ((instance color-button) &rest initargs &key &allow-other-keys)
   (declare (ignore initargs))
-  (%color-button-on-changed instance (cffi:callback on-changed-callback) instance))
+  (%color-button-on-changed instance (cffi:callback on-changed-callback) (cffi:null-pointer)))
