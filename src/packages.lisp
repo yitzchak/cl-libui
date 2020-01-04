@@ -16,6 +16,7 @@
     #:color-button
     #:combobox
     #:control
+    #:content-size
     #:date-picker
     #:date-time-picker
     #:default-miter-limit

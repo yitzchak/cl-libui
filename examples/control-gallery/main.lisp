@@ -16,21 +16,6 @@
   (ui::%quit)
   t)
 
-#|(defmethod ui:on-changed (control)
-  (cond
-    ((eql control *slider*)
-      (let ((value (ui:value control)))
-        (setf (ui:value *spinbox*) value)
-        (setf (ui:value *progress-bar*) value)))
-    ((eql control *spinbox*)
-      (let ((value (ui:value control)))
-        (setf (ui:value *slider*) value)
-        (setf (ui:value *progress-bar*) value)))
-    ((typep control 'ui:font-button)
-      (format t "~S~%" (ui:font control)))
-    ((typep control 'ui:color-button)
-      (format t "~S~%" (ui:color control)))))
-|#
 (defun on-slider-changed (instance)
   (let ((value (ui:value instance)))
     (setf (ui:value *spinbox*) value)
@@ -62,17 +47,16 @@
                            "More detailed information can be shown here."))
 
 (defun make-basic-controls-page ()
-  (let ((vbox (make-instance 'ui:vertical-box :padded t))
-        (hbox (make-instance 'ui:horizontal-box :padded t))
-        (entries-group (make-instance 'ui:group :title "Entries" :margined t))
-        (entry-form (make-instance 'ui:form :padded t)))
+  (let* ((hbox (make-instance 'ui:horizontal-box :padded t))
+         (vbox (make-instance 'ui:vertical-box :padded t))
+         (entry-form (make-instance 'ui:form :padded t))
+         (entries-group (make-instance 'ui:group :title "Entries" :margined t :child entry-form)))
     (ui:append-child vbox hbox)
     (ui:append-child hbox (make-instance 'ui:button :text "Button"))
     (ui:append-child hbox (make-instance 'ui:checkbox :text "Checkbox"))
     (ui:append-child vbox (make-instance 'ui:label :text "This is a label. Right now, labels can only span one line."))
     (ui:append-child vbox (make-instance 'ui:horizontal-separator))
     (ui:append-child vbox entries-group :stretch t)
-    (setf (ui:child entries-group) entry-form)
     (ui:append-child entry-form (make-instance 'ui:entry) :label "Entry")
     (ui:append-child entry-form (make-instance 'ui:password-entry) :label "Password Entry")
     (ui:append-child entry-form (make-instance 'ui:search-entry) :label "Search Entry")
@@ -81,19 +65,18 @@
     vbox))
 
 (defun make-numbers-page ()
-  (let ((vbox (make-instance 'ui:vertical-box :padded t))
-        (hbox (make-instance 'ui:horizontal-box :padded t))
-        (number-group (make-instance 'ui:group :title "Numbers" :margined t))
-        (list-group (make-instance 'ui:group :title "Lists" :margined t))
-        (list-box (make-instance 'ui:vertical-box :padded t))
-        (c (make-instance 'ui:combobox
-                          :items '("Combobox Item 1" "Combobox Item 2" "Combobox Item 3")))
-        (e (make-instance 'ui:editable-combobox
-                          :items '("Editable Item 1" "Editable Item 2" "Editable Item 3")))
-        (r (make-instance 'ui:radio-buttons
-                          :items '("Radio Button 1" "Radio Button 2" "Radio Button 3"))))
+  (let* ((vbox (make-instance 'ui:vertical-box :padded t))
+         (hbox (make-instance 'ui:horizontal-box :padded t))
+         (number-group (make-instance 'ui:group :title "Numbers" :margined t :child vbox))
+         (list-box (make-instance 'ui:vertical-box :padded t))
+         (list-group (make-instance 'ui:group :title "Lists" :margined t :child list-box))
+         (c (make-instance 'ui:combobox
+                           :items '("Combobox Item 1" "Combobox Item 2" "Combobox Item 3")))
+         (e (make-instance 'ui:editable-combobox
+                           :items '("Editable Item 1" "Editable Item 2" "Editable Item 3")))
+         (r (make-instance 'ui:radio-buttons
+                           :items '("Radio Button 1" "Radio Button 2" "Radio Button 3"))))
     (ui:append-child hbox number-group :stretch t)
-    (setf (ui:child number-group) vbox)
     (setq *spinbox* (make-instance 'ui:spinbox :min 0 :max 100 :on-changed #'on-spinbox-changed))
     (ui:append-child vbox *spinbox*)
     (setq *slider* (make-instance 'ui:slider :min 0 :max 100 :on-changed #'on-slider-changed))
@@ -102,7 +85,6 @@
     (ui:append-child vbox *progress-bar*)
     (ui:append-child vbox (make-instance 'ui:progress-bar :value -1))
     (ui:append-child hbox list-group :stretch t)
-    (setf (ui:child list-group) list-box)
     (ui:append-child list-box c)
     (ui:append-child list-box e)
     (ui:append-child list-box r)
@@ -138,9 +120,10 @@
 
 (defun on-init ()
   (let ((tab (make-instance 'ui:tab)))
-    (setq *window* (make-instance 'ui:window :title "libui Control Gallery" :width 640 :height 480
-                                        :has-menubar t :visible t :margined t :on-closing #'on-closing))
-    (setf (ui:child *window*) tab)
+    (setq *window*
+      (make-instance 'ui:window :title "libui Control Gallery" :width 640 :height 480
+                                :has-menubar t :visible t :margined t :on-closing #'on-closing
+                                :child tab))
     (ui:append-child tab (make-basic-controls-page) :title "Basic Controls" :margined t)
     (ui:append-child tab (make-numbers-page) :title "Numbers and Lists" :margined t)
     (ui:append-child tab (make-data-choosers-page) :title "Data Choosers" :margined t)))
