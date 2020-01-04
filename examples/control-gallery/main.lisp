@@ -11,6 +11,11 @@
 (defparameter *msg-button* nil)
 (defparameter *err-button* nil)
 
+(defun on-closing (control)
+  (declare (ignore control))
+  (ui::%quit)
+  t)
+
 #|(defmethod ui:on-changed (control)
   (cond
     ((eql control *slider*)
@@ -131,18 +136,15 @@
       (ui:append-child g *err-button* :left 0 :top 3 :xspan 1 :yspan 1 :halign :fill :valign :fill))
     hbox))
 
-(defmethod ui:on-init ()
+(defun on-init ()
   (let ((tab (make-instance 'ui:tab)))
     (setq *window* (make-instance 'ui:window :title "libui Control Gallery" :width 640 :height 480
-                                        :has-menubar t :visible t :margined t))
+                                        :has-menubar t :visible t :margined t :on-closing #'on-closing))
     (setf (ui:child *window*) tab)
     (ui:append-child tab (make-basic-controls-page) :title "Basic Controls" :margined t)
     (ui:append-child tab (make-numbers-page) :title "Numbers and Lists" :margined t)
     (ui:append-child tab (make-data-choosers-page) :title "Data Choosers" :margined t)))
 
-(defmethod ui:on-closing (control)
-  (declare (ignore control))
-  (ui::%quit)
-  t)
+(setq ui:*on-init* #'on-init)
 
 (ui:main)

@@ -14,24 +14,19 @@
   (or (eql :ui-instance (closer-mop:slot-definition-allocation slot))
       (call-next-method)))
 
-(defgeneric on-should-quit ()
-  (:documentation "Called to confirm quit signal."))
-
-(defmethod on-should-quit ()
-  t)
+(defparameter *on-should-quit* nil)
+(defparameter *on-init* nil)
 
 (cffi:defcallback on-should-quit-callback (:boolean :int) ((data :pointer))
   (declare (ignore data))
-  (on-should-quit))
-
-(defgeneric on-init ()
-  (:documentation "Called after init is completed"))
-
-(defmethod on-init ())
+  (if *on-should-quit*
+    (funcall *on-should-quit*)
+    t))
 
 (cffi:defcallback main-callback :void ((data :pointer))
   (declare (ignore data))
-  (on-init))
+  (when *on-init*
+    (funcall *on-init*)))
 
 (defun main ()
   (cffi:with-foreign-object (o '(:struct %init-options))

@@ -172,12 +172,12 @@
 (cffi:defcfun ("uiWindowOnContentSizeChanged" %window-on-content-size-changed) :void
   (w control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiWindowOnClosing" %window-on-closing) :void
   (w control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiWindowBorderless" %window-borderless) (:boolean :int)
   (w control-pointer))
@@ -248,7 +248,7 @@
 (cffi:defcfun ("uiCheckboxOnToggled" %checkbox-on-toggled) :void
   (c control-pointer)
   (f :pointer)
-  (data :pointer))
+  (data control-id))
 
 (cffi:defcfun ("uiCheckboxChecked" %checkbox-checked) (:boolean :int)
   (c control-pointer))

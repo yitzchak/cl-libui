@@ -1,16 +1,6 @@
 (in-package #:ui)
 
-(defgeneric on-toggled (control)
-  (:documentation "Called on toggle signal."))
-
-(defmethod on-toggled (control)
-  (declare (ignore control)))
-
-(cffi:defcallback on-toggled-callback (:boolean :int) ((control control-pointer) (data :pointer))
-  (declare (ignore data))
-  (on-toggled control))
-
-(defclass checkbox (control)
+(defclass checkbox (control on-toggled-slot)
   ((checked
      :accessor checked
      :initarg :checked
@@ -47,5 +37,8 @@
 
 (defmethod initialize-instance :before ((instance checkbox) &rest initargs &key &allow-other-keys)
   (setf (handle instance)
-        (%new-checkbox (getf initargs :text)))
-  (%checkbox-on-toggled instance (cffi:callback on-toggled-callback) (cffi:null-pointer)))
+        (%new-checkbox (getf initargs :text))))
+
+(defmethod initialize-instance :after ((instance checkbox) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%checkbox-on-toggled instance (cffi:callback on-toggled-callback) instance))

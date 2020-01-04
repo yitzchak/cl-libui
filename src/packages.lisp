@@ -22,6 +22,7 @@
     #:editable-combobox
     #:enabled
     #:entry
+    #:error-box
     #:font
     #:font-button
     #:form
@@ -33,23 +34,24 @@
     #:main
     #:margined
     #:message-box
-    #:error-box
     #:multiline-entry
     #:non-wrapping-multiline-entry
     #:on-changed
     #:on-clicked
     #:on-closing
+    #:on-content-size-changed
     #:on-drag-broken
     #:on-draw
-    #:on-init
+    #:*on-init*
     #:on-key
     #:on-mouse
     #:on-mouse-crossed
-    #:on-should-quit
+    #:*on-should-quit*
+    #:on-toggled
     #:open-file
     #:padded
-    #:path
     #:password-entry
+    #:path
     #:progress-bar
     #:radio-buttons
     #:save-file

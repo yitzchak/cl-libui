@@ -102,10 +102,44 @@
   (declare (ignore pointer))
   (call-on-clicked instance))
 
+(defclass on-closing-slot ()
+  ((on-closing
+     :accessor on-closing
+     :initarg :on-closing
+     :initform nil)))
+
+(defun call-on-closing (instance &rest args)
+  (if instance
+    (with-slots (on-closing) instance
+      (if on-closing
+        (apply on-closing instance args)
+        t))
+    t))
+
+(cffi:defcallback on-closing-callback (:boolean :int) ((pointer :pointer) (instance control-id))
+  (declare (ignore pointer))
+  (call-on-closing instance))
+
+(defclass on-content-size-changed-slot ()
+  ((on-content-size-changed
+     :accessor on-content-size-changed
+     :initarg :on-content-size-changed
+     :initform nil)))
+
+(defun call-on-content-size-changed (instance &rest args)
+  (when instance
+    (with-slots (on-content-size-changed) instance
+      (when on-content-size-changed
+        (apply on-content-size-changed instance args)))))
+
+(cffi:defcallback on-content-size-changed-callback :void ((pointer :pointer) (instance control-id))
+  (declare (ignore pointer))
+  (call-on-content-size-changed instance))
+
 (defclass on-selected-slot ()
   ((on-selected
      :accessor on-selected
-     :initarg :on-selectedselected
+     :initarg :on-selected
      :initform nil)))
 
 (defun call-on-selected (instance &rest args)
@@ -117,6 +151,23 @@
 (cffi:defcallback on-selected-callback :void ((pointer :pointer) (instance control-id))
   (declare (ignore pointer))
   (call-on-selected instance))
+
+(defclass on-toggled-slot ()
+  ((on-toggled
+     :accessor on-toggled
+     :initarg :on-toggled
+     :initform nil)))
+
+(defun call-on-toggled (instance &rest args)
+  (when instance
+    (with-slots (on-toggled) instance
+      (when on-toggled
+        (apply on-toggled instance args)))))
+
+(cffi:defcallback on-toggled-callback :void ((pointer :pointer) (instance control-id))
+  (declare (ignore pointer))
+  (call-on-toggled instance))
+
 
 
 

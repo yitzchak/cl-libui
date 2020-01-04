@@ -1,30 +1,16 @@
 (in-package #:ui)
 
-(defgeneric on-closing (control)
-  (:documentation "Called to confirm close signal."))
-
-(defmethod on-closing (control)
-  (declare (ignore control))
-  t)
-
-(cffi:defcallback on-closing-callback (:boolean :int) ((control control-pointer) (data :pointer))
-  (declare (ignore data))
-  (on-closing control))
-
-(defclass window (control)
+(defclass window (control on-closing-slot on-content-size-changed-slot)
   ((child
      :accessor child
-     :initarg :child
-     :initform nil)
+     :initarg :child)
    (fullscreen
      :accessor fullscreen
      :initarg :fullscreen
-     :initform nil
      :allocation :ui-instance)
    (margined
      :accessor margined
      :initarg :margined
-     :initform nil
      :allocation :ui-instance)
    (title
      :accessor title
@@ -37,8 +23,12 @@
         (%new-window (getf initargs :title)
                      (getf initargs :width)
                      (getf initargs :height)
-                     (getf initargs :has-menubar)))
-  (%window-on-closing instance (cffi:callback on-closing-callback) (cffi:null-pointer)))
+                     (getf initargs :has-menubar))))
+
+(defmethod initialize-instance :after ((instance window) &rest initargs &key &allow-other-keys)
+  (declare (ignore initargs))
+  (%window-on-content-size-changed instance (cffi:callback on-content-size-changed-callback) instance)
+  (%window-on-closing instance (cffi:callback on-closing-callback) instance))
 
 (defmethod (setf child) :after (new-value (object window))
   (when new-value
