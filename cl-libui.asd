@@ -20,6 +20,7 @@
          (:file "core")
          (:file "text-layout")
          (:file "path")
+         (:file "matrix")
          (:file "draw-context")
          (:file "attribute")
          (:file "control")

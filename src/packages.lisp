@@ -5,23 +5,27 @@
     #:append-child
     #:append-item
     #:append-text
+    #:arc-to
     #:area
     #:attributed-string
     #:attributes
+    #:bezier-to
     #:button
     #:checkbox
     #:checked
     #:child
+    #:close-figure
     #:color
     #:color-button
     #:combobox
-    #:control
     #:content-size
+    #:control
     #:date-picker
     #:date-time-picker
     #:default-miter-limit
     #:editable-combobox
     #:enabled
+    #:end
     #:entry
     #:error-box
     #:font
@@ -32,10 +36,14 @@
     #:horizontal-box
     #:horizontal-separator
     #:label
+    #:line-to
     #:main
     #:margined
+    #:matrix
     #:message-box
     #:multiline-entry
+    #:new-figure
+    #:new-figure-with-arc
     #:non-wrapping-multiline-entry
     #:on-changed
     #:on-clicked

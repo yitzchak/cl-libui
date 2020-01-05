@@ -18,6 +18,9 @@
 (defun new-figure-with-arc (instance x-center y-center radius start-angle sweep &optional negative)
   (%draw-path-new-figure-with-arc instance x-center y-center radius start-angle sweep negative))
 
+(defun line-to (instance x y)
+  (%draw-path-line-to instance x y))
+
 (defun arc-to (instance x-center y-center radius start-angle sweep &optional negative)
   (%draw-path-arc-to instance x-center y-center radius start-angle sweep negative))
 
